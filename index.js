@@ -18,5 +18,6 @@ http.listen(PORT, function() {
 });
 
 function handleConnection(client) {
+  client.emit('register_id', client.id);
   console.log('User connected: ' + client.id);
 }
