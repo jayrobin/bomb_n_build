@@ -3,7 +3,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-var PORT = 3002;
+var PORT = 3001;
 
 app.use(express.static('public'));
 
