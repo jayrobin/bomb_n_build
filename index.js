@@ -17,6 +17,6 @@ http.listen(PORT, function() {
   console.log('Server initialized on port: ' + PORT);
 });
 
-function handleConnection() {
-  console.log('User connected');
+function handleConnection(client) {
+  console.log('User connected: ' + client.id);
 }
