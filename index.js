@@ -3,10 +3,11 @@ var app = express();
 var http = require('http').Server(app);
 
 var PORT = 3002;
-var PUBLIC_DIR = __dirname + '/public';
+
+app.use(express.static('public'));
 
 app.get('/', function(req, res) {
-  res.sendFile(PUBLIC_DIR + '/index.html');
+  res.sendFile('index.html');
 })
 
 http.listen(PORT, function() {
