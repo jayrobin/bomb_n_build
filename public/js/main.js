@@ -14,3 +14,5 @@ var game = new Phaser.Game(400, 300, Phaser.AUTO, 'game');
 
 game.state.add('main', mainState);
 game.state.start('main');
+
+var socket = io();
