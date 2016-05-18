@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-const world = require('./game/world');
+const Client = require('./game/client');
+const clients = [];
 
 const PORT = 3001;
 
@@ -18,8 +19,6 @@ http.listen(PORT, function() {
   console.log('Server initialized on port: ' + PORT);
 });
 
-function handleConnection(client) {
-  client.emit('register_id', client.id);
-  client.emit('set_pos', world.getRandomPos());
-  console.log('User connected: ' + client.id);
+function handleConnection(socket) {
+  clients.push(new Client(socket.id, socket, io));
 }
