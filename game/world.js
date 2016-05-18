@@ -1,4 +1,4 @@
-var world = {
+const world = {
   WIDTH: 500,
   HEIGHT: 340,
   getRandomPos: function() {
