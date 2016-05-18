@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+const world = require('./game/world');
 const Client = require('./game/client');
 const clients = [];
 
@@ -20,5 +21,5 @@ http.listen(PORT, function() {
 });
 
 function handleConnection(socket) {
-  clients.push(new Client(socket.id, socket, io));
+  world.addClient(new Client(socket.id, socket, io));
 }
