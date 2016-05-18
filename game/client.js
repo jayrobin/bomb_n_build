@@ -11,15 +11,20 @@ function Client(id, socket, io) {
 Client.prototype.initialize = function() {
   this.setupListeners();
   this.socket.emit('register_id', this.id);
-  this.socket.emit('set_pos', world.getRandomPos());
-}
+  this.setPos(world.getRandomPos())
+};
 
 Client.prototype.setupListeners = function() {
   this.socket.on('disconnect', this.handleDisconnection.bind(this));
-}
+};
 
 Client.prototype.handleDisconnection = function() {
   console.log('Client disconnected');
-}
+};
+
+Client.prototype.setPos = function(pos) {
+  this.pos = pos;
+  this.socket.emit('set_pos', this.pos);
+};
 
 module.exports = Client;
