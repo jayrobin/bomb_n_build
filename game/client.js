@@ -27,4 +27,8 @@ Client.prototype.setPos = function(pos) {
   this.socket.emit('set_pos', this.pos);
 };
 
+Client.prototype.getPos = function() {
+  return this.pos;
+}
+
 module.exports = Client;

@@ -11,6 +11,11 @@ const world = {
   },
   addClient: function(client) {
     this.clients.push(client);
+  },
+  getClientPositions: function() {
+    return this.clients.map(function(client) {
+      return client.getPos();
+    });
   }
 };
 
