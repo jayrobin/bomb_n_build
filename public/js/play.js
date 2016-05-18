@@ -1,10 +1,15 @@
 var playState = {
   create: function() {
-    this.player = new Player(game.world.centerX, game.world.centerY);
+    this.running = false;
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    Client.connect();
+    Client.connect(this);
   },
   update: function() {
-    this.player.update();
+    if (this.running) {
+      this.player.update();
+    }
+  },
+  createPlayer: function(x, y) {
+    this.player = new Player(x, y);
   }
 };
