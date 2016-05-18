@@ -19,6 +19,7 @@ Client.prototype.setupListeners = function() {
 };
 
 Client.prototype.handleDisconnection = function() {
+  world.removeClient(this.id);
   console.log('Client disconnected');
 };
 
@@ -29,6 +30,6 @@ Client.prototype.setPos = function(pos) {
 
 Client.prototype.getPos = function() {
   return this.pos;
-}
+};
 
 module.exports = Client;

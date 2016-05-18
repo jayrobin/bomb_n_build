@@ -12,6 +12,17 @@ const world = {
   addClient: function(client) {
     this.clients.push(client);
   },
+  removeClient: function(id) {
+    for (var i = 0; i < this.clients.length; i++) {
+      var client = this.clients[i];
+      if (client.id === id) {
+        this.clients.splice(i, 1);
+        return true;
+      }
+    }
+
+    return false;
+  },
   getClientPositions: function() {
     return this.clients.map(function(client) {
       return client.getPos();
