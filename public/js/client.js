@@ -14,6 +14,6 @@ var Client = {
     this.game.start();
   },
   handleAddPlayer: function(id, pos) {
-    this.game.createPlayer(pos.x, pos.y);
+    this.game.createNetPlayer(id, pos.x, pos.y);
   }
 };
