@@ -3,20 +3,36 @@ function Player(x, y) {
   game.physics.arcade.enable(this.sprite);
   this.cursor = game.input.keyboard.createCursorKeys();
   this.SPEED = 100;
-  this.sprite.body.drag.x = 50;
-  this.sprite.body.drag.y = 50;
   this.sprite.anchor.setTo(0.5, 0.5)
 }
 
 Player.prototype.update = function() {
+  var horizCursorDown = false;
+  var vertCursorDown = false;
+
   if (this.cursor.left.isDown) {
     this.sprite.body.velocity.x = -this.SPEED;
+    horizCursorDown = true;
   } else if (this.cursor.right.isDown) {
     this.sprite.body.velocity.x = this.SPEED;
-  } else if (this.cursor.up.isDown) {
+    horizCursorDown = true;
+  } else {
+    this.sprite.body.velocity.x = 0;
+  }
+
+  if (this.cursor.up.isDown) {
     this.sprite.body.velocity.y = -this.SPEED;
+    vertCursorDown = true;
   } else if (this.cursor.down.isDown) {
     this.sprite.body.velocity.y = this.SPEED;
+    vertCursorDown = true;
+  } else {
+    this.sprite.body.velocity.y = 0;
+  }
+
+  if (horizCursorDown && vertCursorDown) {
+    this.sprite.body.velocity.y /= 1.5;
+    this.sprite.body.velocity.x /= 1.5;
   }
 
   if (this.sprite.x < -this.sprite.width) {
