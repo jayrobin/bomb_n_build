@@ -20,8 +20,9 @@ Client.prototype.setupListeners = function() {
 };
 
 Client.prototype.handleDisconnection = function() {
+  console.log('Client disconnected ' + this.id);
   world.removeClient(this.id);
-  console.log('Client disconnected');
+  this.socket.broadcast.emit('remove_player', this.id);
 };
 
 Client.prototype.setInitialPos = function(pos) {

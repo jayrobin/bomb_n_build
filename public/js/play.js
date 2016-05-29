@@ -17,6 +17,17 @@ var playState = {
     var player = new NetPlayer(id, x, y);
     this.players.push(player);
   },
+  removeNetPlayer: function(id) {
+    for (var i = 0; i < this.players.length; i++) {
+      var player = this.players[i];
+
+      if (player.id === id) {
+        this.players.splice(i, 1);
+        player.remove();
+        return;
+      }
+    }
+  },
   start: function() {
     this.running = true;
   }
