@@ -4,35 +4,47 @@ function Player(x, y) {
   this.cursor = game.input.keyboard.createCursorKeys();
   this.SPEED = 100;
   this.sprite.anchor.setTo(0.5, 0.5)
+  this.setupInput();
 }
 
 Player.prototype.update = function() {
-  var horizCursorDown = false;
-  var vertCursorDown = false;
+  this.updateInput();
+  this.updatePos();
+};
 
-  if (this.cursor.left.isDown) {
-    this.sprite.body.velocity.x = -this.SPEED;
-    horizCursorDown = true;
-  } else if (this.cursor.right.isDown) {
-    this.sprite.body.velocity.x = this.SPEED;
-    horizCursorDown = true;
-  } else {
-    this.sprite.body.velocity.x = 0;
-  }
+Player.prototype.setupInput = function() {
+  this.input = {
+    keys: {
+      up: false,
+      down: false,
+      left: false,
+      right: false
+    }
+  };
+};
 
-  if (this.cursor.up.isDown) {
+Player.prototype.updateInput = function() {
+  this.input.keys.up = this.cursor.up.isDown;
+  this.input.keys.down = this.cursor.down.isDown;
+  this.input.keys.left = this.cursor.left.isDown;
+  this.input.keys.right = this.cursor.right.isDown;
+};
+
+Player.prototype.updatePos = function() {
+  if (this.input.keys.up) {
     this.sprite.body.velocity.y = -this.SPEED;
-    vertCursorDown = true;
-  } else if (this.cursor.down.isDown) {
+  } else if (this.input.keys.down) {
     this.sprite.body.velocity.y = this.SPEED;
-    vertCursorDown = true;
   } else {
     this.sprite.body.velocity.y = 0;
   }
 
-  if (horizCursorDown && vertCursorDown) {
-    this.sprite.body.velocity.y /= 1.5;
-    this.sprite.body.velocity.x /= 1.5;
+  if (this.input.keys.left) {
+    this.sprite.body.velocity.x = -this.SPEED;
+  } else if (this.input.keys.right) {
+    this.sprite.body.velocity.x = this.SPEED;
+  } else {
+    this.sprite.body.velocity.x = 0;
   }
 
   if (this.sprite.x < -this.sprite.width) {
