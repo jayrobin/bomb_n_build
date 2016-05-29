@@ -5,6 +5,7 @@ var Client = {
     this.socket.on('register_id', this.handleRegisterID);
     this.socket.on('set_initial_pos', this.handleSetInitialPos.bind(this));
     this.socket.on('add_player', this.handleAddPlayer.bind(this));
+    this.socket.on('current_players', this.handleCurrentPlayers.bind(this));
   },
   handleRegisterID: function(id) {
     this.id = id;
@@ -15,5 +16,10 @@ var Client = {
   },
   handleAddPlayer: function(id, pos) {
     this.game.createNetPlayer(id, pos.x, pos.y);
+  },
+  handleCurrentPlayers: function(players) {
+    players.forEach(function(player) {
+      this.handleAddPlayer(player.id, player.pos);
+    }.bind(this));
   }
 };

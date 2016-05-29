@@ -12,6 +12,7 @@ Client.prototype.initialize = function() {
   this.setupListeners();
   this.socket.emit('register_id', this.id);
   this.setInitialPos(world.getRandomPos());
+  this.socket.emit('current_players', world.getClientPositions());
 };
 
 Client.prototype.setupListeners = function() {
