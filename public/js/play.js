@@ -11,5 +11,8 @@ var playState = {
   },
   createPlayer: function(x, y) {
     this.player = new Player(x, y);
+  },
+  start: function() {
+    this.running = true;
   }
 };

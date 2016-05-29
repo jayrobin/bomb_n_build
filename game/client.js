@@ -11,7 +11,7 @@ function Client(id, socket, io) {
 Client.prototype.initialize = function() {
   this.setupListeners();
   this.socket.emit('register_id', this.id);
-  this.setPos(world.getRandomPos())
+  this.setPos(world.getRandomPos());
 };
 
 Client.prototype.setupListeners = function() {

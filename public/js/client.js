@@ -10,5 +10,6 @@ var Client = {
   },
   handleSetPos: function(pos) {
     this.game.createPlayer(pos.x, pos.y);
+    this.game.start();
   }
 };
