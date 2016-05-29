@@ -12,6 +12,7 @@ Client.prototype.initialize = function() {
   this.setupListeners();
   this.socket.emit('register_id', this.id);
   this.setPos(world.getRandomPos());
+  this.joinWorld();
 };
 
 Client.prototype.setupListeners = function() {
@@ -21,6 +22,10 @@ Client.prototype.setupListeners = function() {
 Client.prototype.handleDisconnection = function() {
   world.removeClient(this.id);
   console.log('Client disconnected');
+};
+
+Client.prototype.joinWorld = function() {
+  this.socket.broadcast.emit('add_player', this.id, this.getPos());
 };
 
 Client.prototype.setPos = function(pos) {
