@@ -4,6 +4,7 @@ var bootState = {
   },
   create: function() {
     game.stage.backgroundColor = '#3498db';
+    game.stage.disableVisibilityChange = true;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     if (!game.device.desktop) {
       game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
