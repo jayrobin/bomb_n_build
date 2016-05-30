@@ -17,6 +17,7 @@ Client.prototype.initialize = function() {
 
 Client.prototype.setupListeners = function() {
   this.socket.on('disconnect', this.handleDisconnection.bind(this));
+  this.socket.on('update_input', this.handleUpdateInput.bind(this));
 };
 
 Client.prototype.handleDisconnection = function() {
@@ -28,11 +29,11 @@ Client.prototype.handleDisconnection = function() {
 Client.prototype.setInitialPos = function(pos) {
   this.pos = pos;
   this.socket.emit('set_initial_pos', this.pos);
-  this.socket.broadcast.emit('add_player', this.id, this.getPos());
+  this.socket.broadcast.emit('add_player', this.id, this.pos());
 };
 
-Client.prototype.getPos = function() {
-  return this.pos;
-};
+Client.prototype.handleUpdateInput = function(input) {
+  console.log(input);
+}
 
 module.exports = Client;

@@ -25,7 +25,7 @@ const world = {
   },
   getClientPositions: function() {
     return this.clients.map(function(client) {
-      return { id: client.id, pos: client.getPos() };
+      return { id: client.id, pos: client.pos };
     });
   }
 };
