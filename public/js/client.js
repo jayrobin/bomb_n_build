@@ -8,6 +8,7 @@ var Client = {
     this.socket.on('current_players', this.handleCurrentPlayers.bind(this));
     this.socket.on('remove_player', this.handleRemovePlayer.bind(this));
     this.socket.on('update_input', this.handleUpdateInput.bind(this));
+    this.socket.on('drop_bomb', this.handleDropBomb.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -37,7 +38,13 @@ var Client = {
       player.updateInput(input);
     }
   },
+  handleDropBomb: function(id, pos) {
+    this.game.addBomb(id, pos.x, pos.y);
+  },
   updateInput: function(input) {
     this.socket.emit('update_input', input);
+  },
+  dropBomb: function(x, y) {
+    this.socket.emit('drop_bomb', { x: x, y: y });
   }
 };

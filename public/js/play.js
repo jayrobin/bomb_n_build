@@ -2,6 +2,7 @@ var playState = {
   create: function() {
     this.running = false;
     this.players = [];
+    this.bombs = [];
     game.physics.startSystem(Phaser.Physics.ARCADE);
     Client.connect(this);
   },
@@ -15,7 +16,7 @@ var playState = {
     }
   },
   createPlayer: function(x, y) {
-    this.player = new LocalPlayer(x, y);
+    this.player = new LocalPlayer(x, y, this);
   },
   createNetPlayer: function(id, x, y) {
     var player = new NetPlayer(id, x, y);
@@ -40,6 +41,10 @@ var playState = {
         return;
       }
     }
+  },
+  addBomb: function(id, x, y) {
+    var bomb = new Bomb(id, x, y);
+    this.bombs.push(bomb);
   },
   start: function() {
     this.running = true;

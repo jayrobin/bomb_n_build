@@ -18,6 +18,7 @@ Client.prototype.initialize = function() {
 Client.prototype.setupListeners = function() {
   this.socket.on('disconnect', this.handleDisconnection.bind(this));
   this.socket.on('update_input', this.handleUpdateInput.bind(this));
+  this.socket.on('drop_bomb', this.handleDropBomb.bind(this));
 };
 
 Client.prototype.handleDisconnection = function() {
@@ -34,6 +35,12 @@ Client.prototype.setInitialPos = function(pos) {
 
 Client.prototype.handleUpdateInput = function(input) {
   this.socket.broadcast.emit('update_input', this.id, input);
-}
+};
+
+Client.prototype.handleDropBomb = function(pos) {
+  console.log("Bomb dropped at " + pos.x + ", " + pos.y);
+  var bombId = world.addBomb(pos.x, pos.y);
+  this.io.emit('drop_bomb', bombId, pos);
+};
 
 module.exports = Client;

@@ -1,13 +1,20 @@
-function LocalPlayer(x, y) {
+function LocalPlayer(x, y, game) {
   this.initialize();
+  this.game = game;
   this.sprite = game.add.sprite(x, y, 'player');
   game.physics.arcade.enable(this.sprite);
   this.cursor = game.input.keyboard.createCursorKeys();
-  this.sprite.anchor.setTo(0.5, 0.5)
+  this.sprite.anchor.setTo(0.5, 0.5);
+  this.setupControls();
 }
 
 LocalPlayer.prototype = new Player();
 LocalPlayer.constructor = LocalPlayer;
+
+LocalPlayer.prototype.setupControls = function() {
+  var dropBomb = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+  dropBomb.onDown.add(this.dropBomb, this);
+};
 
 LocalPlayer.prototype.update = function() {
   this.updateInput();
@@ -41,4 +48,8 @@ LocalPlayer.prototype.updateInput = function() {
   if (update) {
     Client.updateInput(this.input);
   }
+};
+
+LocalPlayer.prototype.dropBomb = function() {
+  Client.dropBomb(this.sprite.x, this.sprite.y);
 };

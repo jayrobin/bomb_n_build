@@ -1,7 +1,10 @@
+const Bomb = require('./bomb');
+
 const world = {
   WIDTH: 500,
   HEIGHT: 340,
   clients: [],
+  bombs: [],
   getRandomPos: function() {
     var pos = {};
     pos.x = Math.floor(Math.random() * this.WIDTH) + 1;
@@ -27,6 +30,12 @@ const world = {
     return this.clients.map(function(client) {
       return { id: client.id, pos: client.pos };
     });
+  },
+  addBomb: function(x, y) {
+    var bomb = new Bomb(x, y, this.bombs.length);
+    this.bombs.push(bomb);
+
+    return bomb.id;
   }
 };
 

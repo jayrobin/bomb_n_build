@@ -2,6 +2,7 @@ var bootState = {
   preload: function() {
     game.load.image('player', 'assets/img/player.png');
     game.load.image('enemy', 'assets/img/enemy.png');
+    game.load.image('bomb', 'assets/img/bomb.png');
   },
   create: function() {
     game.stage.backgroundColor = '#3498db';
