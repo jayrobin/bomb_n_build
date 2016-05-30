@@ -24,10 +24,32 @@ Player.prototype.setupInput = function() {
 };
 
 Player.prototype.updateInput = function() {
-  this.input.keys.up = this.cursor.up.isDown;
-  this.input.keys.down = this.cursor.down.isDown;
-  this.input.keys.left = this.cursor.left.isDown;
-  this.input.keys.right = this.cursor.right.isDown;
+  var inputDelta = {
+    keys: {}
+  };
+
+  var update = false;
+
+  if (this.input.keys.up !== this.cursor.up.isDown) {
+    this.input.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
+    update = true;
+  }
+  if (this.input.keys.down !== this.cursor.down.isDown) {
+    this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
+    update = true;
+  }
+  if (this.input.keys.left !== this.cursor.left.isDown) {
+    this.input.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
+    update = true;
+  }
+  if (this.input.keys.right !== this.cursor.right.isDown) {
+    this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
+    update = true;
+  }
+
+  if (update) {
+    Client.updateInput(this.input.keys);
+  }
 };
 
 Player.prototype.updatePos = function() {

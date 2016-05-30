@@ -29,5 +29,8 @@ var Client = {
   handleRemovePlayer: function(id) {
     console.log("Removing net player " + id);
     this.game.removeNetPlayer(id);
+  },
+  updateInput: function(input) {
+    this.socket.emit('update_input', input);
   }
 };
