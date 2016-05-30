@@ -11,7 +11,7 @@ var playState = {
     }
   },
   createPlayer: function(x, y) {
-    this.player = new Player(x, y);
+    this.player = new LocalPlayer(x, y);
   },
   createNetPlayer: function(id, x, y) {
     var player = new NetPlayer(id, x, y);

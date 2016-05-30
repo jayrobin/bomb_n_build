@@ -1,15 +1,8 @@
-function Player(x, y) {
-  this.sprite = game.add.sprite(x, y, 'player');
-  game.physics.arcade.enable(this.sprite);
-  this.cursor = game.input.keyboard.createCursorKeys();
-  this.SPEED = 100;
-  this.sprite.anchor.setTo(0.5, 0.5)
-  this.setupInput();
-}
+function Player() {}
 
-Player.prototype.update = function() {
-  this.updateInput();
-  this.updatePos();
+Player.prototype.initialize = function() {
+  this.SPEED = 100;
+  this.setupInput();
 };
 
 Player.prototype.setupInput = function() {
@@ -21,35 +14,6 @@ Player.prototype.setupInput = function() {
       right: false
     }
   };
-};
-
-Player.prototype.updateInput = function() {
-  var inputDelta = {
-    keys: {}
-  };
-
-  var update = false;
-
-  if (this.input.keys.up !== this.cursor.up.isDown) {
-    this.input.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
-    update = true;
-  }
-  if (this.input.keys.down !== this.cursor.down.isDown) {
-    this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
-    update = true;
-  }
-  if (this.input.keys.left !== this.cursor.left.isDown) {
-    this.input.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
-    update = true;
-  }
-  if (this.input.keys.right !== this.cursor.right.isDown) {
-    this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
-    update = true;
-  }
-
-  if (update) {
-    Client.updateInput(this.input.keys);
-  }
 };
 
 Player.prototype.updatePos = function() {

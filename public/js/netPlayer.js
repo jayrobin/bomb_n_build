@@ -4,6 +4,9 @@ function NetPlayer(id, x, y) {
   this.sprite.anchor.setTo(0.5, 0.5)
 }
 
+NetPlayer.prototype = new Player();
+NetPlayer.constructor = NetPlayer;
+
 NetPlayer.prototype.remove = function() {
   this.sprite.destroy();
 };

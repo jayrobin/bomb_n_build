@@ -29,7 +29,7 @@ Client.prototype.handleDisconnection = function() {
 Client.prototype.setInitialPos = function(pos) {
   this.pos = pos;
   this.socket.emit('set_initial_pos', this.pos);
-  this.socket.broadcast.emit('add_player', this.id, this.pos());
+  this.socket.broadcast.emit('add_player', this.id, this.pos);
 };
 
 Client.prototype.handleUpdateInput = function(input) {
