@@ -7,6 +7,7 @@ var Client = {
     this.socket.on('add_player', this.handleAddPlayer.bind(this));
     this.socket.on('current_players', this.handleCurrentPlayers.bind(this));
     this.socket.on('remove_player', this.handleRemovePlayer.bind(this));
+    this.socket.on('update_input', this.handleUpdateInput.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -29,6 +30,12 @@ var Client = {
   handleRemovePlayer: function(id) {
     console.log("Removing net player " + id);
     this.game.removeNetPlayer(id);
+  },
+  handleUpdateInput: function(id, input) {
+    var player = this.game.findPlayerById(id);
+    if (player) {
+      player.updateInput(input);
+    }
   },
   updateInput: function(input) {
     this.socket.emit('update_input', input);

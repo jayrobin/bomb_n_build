@@ -33,7 +33,7 @@ Client.prototype.setInitialPos = function(pos) {
 };
 
 Client.prototype.handleUpdateInput = function(input) {
-  console.log(input);
+  this.socket.broadcast.emit('update_input', this.id, input);
 }
 
 module.exports = Client;

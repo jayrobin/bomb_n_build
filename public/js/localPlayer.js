@@ -39,6 +39,6 @@ LocalPlayer.prototype.updateInput = function() {
   }
 
   if (update) {
-    Client.updateInput(this.input.keys);
+    Client.updateInput(this.input);
   }
 };
