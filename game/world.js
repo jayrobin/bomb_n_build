@@ -36,7 +36,7 @@ const world = {
   },
   getBombPositions: function() {
     return this.bombs.map(function(bomb) {
-      return { id: bomb.id, pos: bomb.pos };
+      return { id, pos };
     });
   },
   addBomb: function(x, y) {

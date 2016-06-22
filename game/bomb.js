@@ -1,7 +1,7 @@
 const DELAY = 300000;
 
 function Bomb(x, y, id, world) {
-  this.pos = { x: x, y: y };
+  this.pos = { x, y };
   this.id = id;
   this.world = world;
   this.dropTime = world.getTime();
