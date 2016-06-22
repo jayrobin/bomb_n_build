@@ -13,6 +13,7 @@ Client.prototype.initialize = function() {
   this.socket.emit('register_id', this.id);
   this.setInitialPos(world.getRandomPos());
   this.socket.emit('current_players', world.getClientPositions());
+  this.socket.emit('current_bombs', world.getBombPositions());
 };
 
 Client.prototype.setupListeners = function() {
@@ -33,7 +34,8 @@ Client.prototype.setInitialPos = function(pos) {
   this.socket.broadcast.emit('add_player', this.id, this.pos);
 };
 
-Client.prototype.handleUpdateInput = function(input) {
+Client.prototype.handleUpdateInput = function(input, pos) {
+  this.pos = pos;
   this.socket.broadcast.emit('update_input', this.id, input);
 };
 

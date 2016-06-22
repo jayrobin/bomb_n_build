@@ -46,6 +46,17 @@ var playState = {
     var bomb = new Bomb(id, x, y);
     this.bombs.push(bomb);
   },
+  removeBomb: function(id) {
+    for (var i = 0; i < this.bombs.length; i++) {
+      var bomb = this.bombs[i];
+
+      if (bomb.id === id) {
+        this.bombs.splice(i, 1);
+        bomb.remove();
+        return;
+      }
+    }
+  },
   start: function() {
     this.running = true;
   }

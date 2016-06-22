@@ -46,7 +46,7 @@ LocalPlayer.prototype.updateInput = function() {
   }
 
   if (update) {
-    Client.updateInput(this.input);
+    Client.updateInput(this.input, { x: this.sprite.x, y: this.sprite.y });
   }
 };
 

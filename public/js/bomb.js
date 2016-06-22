@@ -4,3 +4,7 @@ function Bomb(id, x, y) {
   game.physics.arcade.enable(this.sprite);
   this.sprite.anchor.setTo(0.5, 0.5);
 }
+
+Bomb.prototype.remove = function() {
+  this.sprite.destroy();
+};
