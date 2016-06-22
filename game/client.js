@@ -4,7 +4,7 @@ function Client(id, socket, io) {
   this.id = id;
   this.socket = socket;
   this.io = io;
-  console.log('Client connected: ' + this.id);
+  console.log(`Client connected: ${this.id}`);
   this.initialize();
 }
 
@@ -23,7 +23,7 @@ Client.prototype.setupListeners = function() {
 };
 
 Client.prototype.handleDisconnection = function() {
-  console.log('Client disconnected ' + this.id);
+  console.log(`Client disconnected ${this.id}`);
   world.removeClient(this.id);
   this.socket.broadcast.emit('remove_player', this.id);
 };
@@ -40,7 +40,7 @@ Client.prototype.handleUpdateInput = function(input, pos) {
 };
 
 Client.prototype.handleDropBomb = function(pos) {
-  console.log("Bomb dropped at " + pos.x + ", " + pos.y);
+  console.log(`Bomb dropped at ${pos.x}, ${pos.y}`);
   var bombId = world.addBomb(pos.x, pos.y);
   this.io.emit('drop_bomb', bombId, pos);
 };

@@ -19,7 +19,7 @@ app.get('/', function(req, res) {
 io.on('connection', handleConnection);
 
 http.listen(PORT, function() {
-  console.log('Server initialized on port: ' + PORT);
+  console.log(`Server initialized on port: ${PORT}`);
 });
 
 setInterval(world.tick.bind(world), TICK_DELAY);
