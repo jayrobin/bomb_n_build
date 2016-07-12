@@ -1,3 +1,4 @@
+const events = require('./events');
 const Bomb = require('./bomb');
 
 const world = {
@@ -36,11 +37,14 @@ const world = {
   },
   getBombPositions: function() {
     return this.bombs.map(function(bomb) {
-      return { id, pos };
+      return { id: bomb.id, pos: bomb.pos };
     });
   },
   addBomb: function(x, y) {
-    var bomb = new Bomb(x, y, this.bombs.length, this);
+    var pos = this.clipPosToGrid({x, y});
+
+    var bomb = new Bomb(pos.x, pos.y, this.bombs.length, this);
+    bomb.addObserver(this, events.BOMB.EXPLODE);
     this.bombs.push(bomb);
 
     return bomb.id;
@@ -64,6 +68,14 @@ const world = {
   },
   getTime: function() {
     return new Date().getTime();
+  },
+  notify: function(entity, event) {
+    switch(event) {
+      case 'bomb.explode':
+        this.removeBomb(entity.id);
+        entity.removeObserver(this, events.BOMB.EXPLODE);
+      break;
+    }
   }
 };
 
