@@ -8,7 +8,6 @@ function Bomb(x, y, id, world) {
   this.pos = { x, y };
   this.id = id;
   this.world = world;
-  this.dropTime = world.getTime();
   this.fuse = DELAY;
   this.active = true;
 }
@@ -18,7 +17,7 @@ Bomb.prototype.constructor = Bomb;
 
 Bomb.prototype.update = function() {
   if (this.active) {
-    this.fuse -= (this.world.getTime() - this.dropTime);
+    this.fuse -= this.world.getElapsed();
 
     if (this.fuse <= 0) {
       this.active = false;

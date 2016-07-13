@@ -7,6 +7,7 @@ const world = {
   CELL_SIZE: 32,
   clients: [],
   bombs: [],
+  lastTick: new Date().getTime(),
   setServer: function(server) {
     this.server = server;
   },
@@ -66,9 +67,13 @@ const world = {
     this.bombs.forEach(function(bomb) {
       bomb.update();
     });
+    this.lastTick = this.getTime();
   },
   getTime: function() {
     return new Date().getTime();
+  },
+  getElapsed: function() {
+    return this.getTime() - this.lastTick;
   },
   clipPosToGrid: function(pos) {
     var clippedPos = {
