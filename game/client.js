@@ -40,9 +40,9 @@ Client.prototype.handleUpdateInput = function(input, pos) {
 };
 
 Client.prototype.handleDropBomb = function(pos) {
-  console.log(`Bomb dropped at ${pos.x}, ${pos.y}`);
-  var bombId = world.addBomb(pos.x, pos.y);
-  this.io.emit('drop_bomb', bombId, pos);
+  var bomb = world.addBomb(pos.x, pos.y);
+  console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
+  this.io.emit('drop_bomb', bomb.id, bomb.pos);
 };
 
 module.exports = Client;

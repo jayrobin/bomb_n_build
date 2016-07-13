@@ -4,6 +4,7 @@ const Bomb = require('./bomb');
 const world = {
   WIDTH: 500,
   HEIGHT: 340,
+  CELL_SIZE: 32,
   clients: [],
   bombs: [],
   setServer: function(server) {
@@ -47,7 +48,7 @@ const world = {
     bomb.addObserver(this, events.BOMB.EXPLODE);
     this.bombs.push(bomb);
 
-    return bomb.id;
+    return bomb;
   },
   removeBomb: function(id) {
     for (var i = 0; i < this.bombs.length; i++) {
@@ -68,6 +69,14 @@ const world = {
   },
   getTime: function() {
     return new Date().getTime();
+  },
+  clipPosToGrid: function(pos) {
+    var clippedPos = {
+      x: Math.floor(pos.x / this.CELL_SIZE) * this.CELL_SIZE,
+      y: Math.floor(pos.y / this.CELL_SIZE) * this.CELL_SIZE
+    }
+
+    return clippedPos;
   },
   notify: function(entity, event) {
     switch(event) {
