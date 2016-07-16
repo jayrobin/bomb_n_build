@@ -1,8 +1,22 @@
 var playState = {
+  mapData: [
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1]
+  ],
   create: function() {
     this.running = false;
     this.players = [];
     this.bombs = [];
+    this.world = new World();
+    this.world.setTiles(this.mapData);
     game.physics.startSystem(Phaser.Physics.ARCADE);
     Client.connect(this);
   },

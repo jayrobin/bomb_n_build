@@ -3,6 +3,7 @@ var bootState = {
     game.load.image('player', 'assets/img/player.png');
     game.load.image('enemy', 'assets/img/enemy.png');
     game.load.image('bomb', 'assets/img/bomb.png');
+    game.load.image('tiles', 'assets/img/tiles.png');
   },
   create: function() {
     game.stage.backgroundColor = '#3498db';
