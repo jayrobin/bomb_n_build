@@ -67,6 +67,9 @@ const world = {
     this.bombs.forEach(function(bomb) {
       bomb.update();
     });
+    this.clients.forEach(function(client) {
+      client.update();
+    });
     this.lastTick = this.getTime();
   },
   getTime: function() {

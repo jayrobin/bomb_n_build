@@ -1,9 +1,12 @@
 const world = require('./world');
 
+const BOMB_DROP_DELAY = 1000;
+
 function Client(id, socket, io) {
   this.id = id;
   this.socket = socket;
   this.io = io;
+  this.active = false;
   console.log(`Client connected: ${this.id}`);
   this.initialize();
 }
@@ -14,6 +17,8 @@ Client.prototype.initialize = function() {
   this.setInitialPos(world.getRandomPos());
   this.socket.emit('current_players', world.getClientPositions());
   this.socket.emit('current_bombs', world.getBombPositions());
+  this.bombDropTimer = 0;
+  this.active = true;
 };
 
 Client.prototype.setupListeners = function() {
@@ -40,9 +45,24 @@ Client.prototype.handleUpdateInput = function(input, pos) {
 };
 
 Client.prototype.handleDropBomb = function(pos) {
-  var bomb = world.addBomb(pos.x, pos.y);
-  console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
-  this.io.emit('drop_bomb', bomb.id, bomb.pos);
+  if (this.bombDropTimer === 0) {
+    var bomb = world.addBomb(pos.x, pos.y);
+    console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
+    this.io.emit('drop_bomb', bomb.id, bomb.pos);
+    this.bombDropTimer = BOMB_DROP_DELAY;
+  }
+};
+
+Client.prototype.update = function() {
+  if (this.active) {
+    this.tickBombDropTimer();
+  }
+};
+
+Client.prototype.tickBombDropTimer = function() {
+  if (this.bombDropTimer > 0) {
+    this.bombDropTimer = Math.max(this.bombDropTimer - world.getElapsed(), 0);
+  }
 };
 
 module.exports = Client;
