@@ -2,13 +2,13 @@ var playState = {
   create: function() {
     this.running = false;
     this.players = [];
-    this.bombs = [];
     this.world = new World();
     game.physics.startSystem(Phaser.Physics.ARCADE);
     Client.connect(this);
   },
   setMap: function(mapData) {
     this.world.setTiles(mapData);
+    this.bombs = game.add.group();
   },
   update: function() {
     if (this.running) {
@@ -50,19 +50,21 @@ var playState = {
     }
   },
   addBomb: function(id, x, y) {
-    var bomb = new Bomb(id, x, y);
-    this.bombs.push(bomb);
+    var bomb = this.bombs.getFirstDead();
+
+    if (!bomb) {
+      this.bombs.add(new Bomb(id, x, y));
+    } else {
+      bomb.init(id, x, y);
+    }
   },
   removeBomb: function(id) {
-    for (var i = 0; i < this.bombs.length; i++) {
-      var bomb = this.bombs[i];
-
+    this.bombs.forEach(function(bomb) {
       if (bomb.id === id) {
-        this.bombs.splice(i, 1);
         bomb.remove();
         return;
       }
-    }
+    });
   },
   start: function() {
     this.running = true;
