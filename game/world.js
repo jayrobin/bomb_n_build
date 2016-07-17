@@ -30,8 +30,8 @@ const world = {
   },
   getRandomPos: function() {
     var pos = {};
-    pos.x = Math.floor(Math.random() * this.WIDTH) + 1;
-    pos.y = Math.floor(Math.random() * this.HEIGHT) + 1;
+    pos.x = this.CELL_SIZE + Math.floor(Math.random() * (this.WIDTH - this.CELL_SIZE * 2));
+    pos.y = this.CELL_SIZE + Math.floor(Math.random() * (this.HEIGHT - this.CELL_SIZE * 2));
 
     return pos;
   },

@@ -17,6 +17,8 @@ var playState = {
       this.players.forEach(function(player) {
         player.update();
       });
+
+      this.game.physics.arcade.collide(this.player.sprite, this.world.tiles);
     }
   },
   createPlayer: function(x, y) {
