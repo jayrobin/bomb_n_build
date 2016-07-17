@@ -5,6 +5,7 @@ var Client = {
     this.socket.on('register_id', this.handleRegisterID);
     this.socket.on('set_initial_pos', this.handleSetInitialPos.bind(this));
     this.socket.on('add_player', this.handleAddPlayer.bind(this));
+    this.socket.on('map_state', this.handleMapState.bind(this));
     this.socket.on('current_players', this.handleCurrentPlayers.bind(this));
     this.socket.on('current_bombs', this.handleCurrentBombs.bind(this));
     this.socket.on('remove_player', this.handleRemovePlayer.bind(this));
@@ -20,6 +21,9 @@ var Client = {
     console.log("Setting initial pos: " + pos.x + ", " + pos.y);
     this.game.createPlayer(pos.x, pos.y);
     this.game.start();
+  },
+  handleMapState: function(map) {
+    this.game.setMap(map);
   },
   handleAddPlayer: function(id, pos) {
     console.log("Adding net player " + id + " (" + pos.x + ", " + pos.y + ")");
