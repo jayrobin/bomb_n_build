@@ -7,7 +7,7 @@ world.setServer(io);
 const Client = require('./game/client');
 const clients = [];
 
-const PORT = 3001;
+const PORT = process.env.MG_PORT || 3001;
 const TICK_DELAY = 100;
 
 app.use(express.static('public'));
