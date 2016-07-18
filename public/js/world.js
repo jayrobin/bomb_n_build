@@ -14,9 +14,13 @@ World.prototype.setTiles = function(tileArr) {
   for(var y = 0; y < height; y++) {
     var row = tileArr[y];
     for(var x = 0; x < width; x++) {
-      this.map.putTile(row[x], x, y, this.tiles);
+      this.setTile(x, y, row[x]);
     }
   }
 
   this.map.setCollision([1], true, this.tiles);
-}
+};
+
+World.prototype.setTile = function(x, y, tileState) {
+  this.map.putTile(tileState, x, y, this.tiles);
+};

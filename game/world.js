@@ -81,6 +81,10 @@ const world = {
 
     return false;
   },
+  upgradeTile: function(x, y) {
+    this.map[y][x] = 1;
+    return this.map[y][x];
+  },
   tick: function() {
     this.bombs.forEach(function(bomb) {
       bomb.update();
@@ -100,9 +104,17 @@ const world = {
     var clippedPos = {
       x: Math.floor(pos.x / this.CELL_SIZE) * this.CELL_SIZE,
       y: Math.floor(pos.y / this.CELL_SIZE) * this.CELL_SIZE
-    }
+    };
 
     return clippedPos;
+  },
+  coordsToGridPos: function(coords) {
+    var gridPos = {
+      x: Math.floor(coords.x / this.CELL_SIZE),
+      y: Math.floor(coords.y / this.CELL_SIZE),
+    };
+
+    return gridPos;
   },
   notify: function(entity, event) {
     switch(event) {

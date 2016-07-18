@@ -26,6 +26,7 @@ Client.prototype.setupListeners = function() {
   this.socket.on('disconnect', this.handleDisconnection.bind(this));
   this.socket.on('update_input', this.handleUpdateInput.bind(this));
   this.socket.on('drop_bomb', this.handleDropBomb.bind(this));
+  this.socket.on('upgrade_tile', this.handleUpgradeTile.bind(this));
 };
 
 Client.prototype.handleDisconnection = function() {
@@ -52,6 +53,13 @@ Client.prototype.handleDropBomb = function(pos) {
     this.io.emit('drop_bomb', bomb.id, bomb.pos);
     this.bombDropTimer = BOMB_DROP_DELAY;
   }
+};
+
+Client.prototype.handleUpgradeTile = function(pos) {
+  var gridPos = world.coordsToGridPos(pos);
+  console.log(`Upgrading tile at ${gridPos.x}, ${gridPos.y}`);
+  var tileState = world.upgradeTile(gridPos.x, gridPos.y);
+  this.io.emit('set_tile', gridPos, tileState);
 };
 
 Client.prototype.update = function() {

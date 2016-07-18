@@ -14,6 +14,9 @@ LocalPlayer.constructor = LocalPlayer;
 LocalPlayer.prototype.setupControls = function() {
   var dropBomb = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   dropBomb.onDown.add(this.dropBomb, this);
+
+  var upgradeTile = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+  upgradeTile.onDown.add(this.upgradeTile, this);
 };
 
 LocalPlayer.prototype.update = function() {
@@ -52,4 +55,8 @@ LocalPlayer.prototype.updateInput = function() {
 
 LocalPlayer.prototype.dropBomb = function() {
   Client.dropBomb(this.x, this.y);
+};
+
+LocalPlayer.prototype.upgradeTile = function() {
+  Client.upgradeTile(this.x, this.y);
 };

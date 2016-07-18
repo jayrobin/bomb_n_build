@@ -60,6 +60,9 @@ var playState = {
       }
     });
   },
+  setTile: function(x, y, tileState) {
+    this.world.setTile(x, y, tileState);
+  },
   start: function() {
     this.running = true;
   }
