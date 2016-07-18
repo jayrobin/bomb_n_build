@@ -1,16 +1,16 @@
 function NetPlayer(id, x, y) {
+  Phaser.Sprite.call(this, game, x, y, 'enemy');
   this.initialize();
   this.id = id;
-  this.sprite = game.add.sprite(x, y, 'enemy');
-  game.physics.arcade.enable(this.sprite);
-  this.sprite.anchor.setTo(0.5, 0.5);
+  game.physics.arcade.enable(this);
+  this.anchor.setTo(0.5, 0.5);
 }
 
-NetPlayer.prototype = new Player();
+NetPlayer.prototype = Object.create(Player.prototype);
 NetPlayer.constructor = NetPlayer;
 
 NetPlayer.prototype.remove = function() {
-  this.sprite.destroy();
+  this.kill();
 };
 
 NetPlayer.prototype.update = function() {

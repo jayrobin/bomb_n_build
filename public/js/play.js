@@ -1,7 +1,6 @@
 var playState = {
   create: function() {
     this.running = false;
-    this.players = [];
     this.world = new World();
     game.physics.startSystem(Phaser.Physics.ARCADE);
     Client.connect(this);
@@ -9,6 +8,7 @@ var playState = {
   setMap: function(mapData) {
     this.world.setTiles(mapData);
     this.bombs = game.add.group();
+    this.players = game.add.group();
   },
   update: function() {
     if (this.running) {
@@ -18,35 +18,29 @@ var playState = {
         player.update();
       });
 
-      this.game.physics.arcade.collide(this.player.sprite, this.world.tiles);
+      this.game.physics.arcade.collide(this.player, this.world.tiles);
     }
   },
   createPlayer: function(x, y) {
     this.player = new LocalPlayer(x, y, this);
-    game.camera.follow(this.player.sprite);
+    this.players.add(this.player);
+    game.camera.follow(this.player);
   },
   createNetPlayer: function(id, x, y) {
     var player = new NetPlayer(id, x, y);
-    this.players.push(player);
+    this.players.add(player);
   },
   findPlayerById(id) {
-    for (var i = 0; i < this.players.length; i++) {
-      var player = this.players[i];
-
+    return this.players.filter(function(player) {
       if (player.id === id) {
         return player;
       }
-    }
+    }).first;
   },
   removeNetPlayer: function(id) {
-    for (var i = 0; i < this.players.length; i++) {
-      var player = this.players[i];
-
-      if (player.id === id) {
-        this.players.splice(i, 1);
-        player.remove();
-        return;
-      }
+    var player = this.findPlayerById(id);
+    if (player) {
+      player.remove();
     }
   },
   addBomb: function(id, x, y) {

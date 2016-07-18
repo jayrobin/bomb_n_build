@@ -1,14 +1,14 @@
 function LocalPlayer(x, y, game) {
+  Phaser.Sprite.call(this, game, x, y, 'player');
   this.initialize();
   this.game = game;
-  this.sprite = game.add.sprite(x, y, 'player');
-  game.physics.arcade.enable(this.sprite);
+  game.physics.arcade.enable(this);
   this.cursor = game.input.keyboard.createCursorKeys();
-  this.sprite.anchor.setTo(0.5, 0.5);
+  this.anchor.setTo(0.5, 0.5);
   this.setupControls();
 }
 
-LocalPlayer.prototype = new Player();
+LocalPlayer.prototype = Object.create(Player.prototype);
 LocalPlayer.constructor = LocalPlayer;
 
 LocalPlayer.prototype.setupControls = function() {
@@ -46,10 +46,10 @@ LocalPlayer.prototype.updateInput = function() {
   }
 
   if (update) {
-    Client.updateInput(this.input, { x: this.sprite.x, y: this.sprite.y });
+    Client.updateInput(this.input, { x: this.x, y: this.y });
   }
 };
 
 LocalPlayer.prototype.dropBomb = function() {
-  Client.dropBomb(this.sprite.x, this.sprite.y);
+  Client.dropBomb(this.x, this.y);
 };

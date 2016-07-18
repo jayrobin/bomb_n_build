@@ -1,5 +1,8 @@
 function Player() {}
 
+Player.prototype = Object.create(Phaser.Sprite.prototype);
+Player.prototype.constructor = Player;
+
 Player.prototype.initialize = function() {
   this.SPEED = 100;
   this.setupInput();
@@ -18,28 +21,28 @@ Player.prototype.setupInput = function() {
 
 Player.prototype.updatePos = function() {
   if (this.input.keys.up) {
-    this.sprite.body.velocity.y = -this.SPEED;
+    this.body.velocity.y = -this.SPEED;
   } else if (this.input.keys.down) {
-    this.sprite.body.velocity.y = this.SPEED;
+    this.body.velocity.y = this.SPEED;
   } else {
-    this.sprite.body.velocity.y = 0;
+    this.body.velocity.y = 0;
   }
 
   if (this.input.keys.left) {
-    this.sprite.body.velocity.x = -this.SPEED;
+    this.body.velocity.x = -this.SPEED;
   } else if (this.input.keys.right) {
-    this.sprite.body.velocity.x = this.SPEED;
+    this.body.velocity.x = this.SPEED;
   } else {
-    this.sprite.body.velocity.x = 0;
+    this.body.velocity.x = 0;
   }
 
-  if (this.sprite.x < -this.sprite.width) {
-    this.sprite.x = game.world.width;
-  } else if (this.sprite.x > game.world.width) {
-    this.sprite.x = -this.sprite.width;
-  } else if (this.sprite.y < -this.sprite.height) {
-    this.sprite.y = game.world.height;
-  } else if (this.sprite.y > game.world.height) {
-    this.sprite.y = -this.sprite.height;
+  if (this.x < -this.width) {
+    this.x = game.world.width;
+  } else if (this.x > game.world.width) {
+    this.x = -this.width;
+  } else if (this.y < -this.height) {
+    this.y = game.world.height;
+  } else if (this.y > game.world.height) {
+    this.y = -this.height;
   }
 };
