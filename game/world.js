@@ -85,6 +85,10 @@ const world = {
     this.map[y][x] = 1;
     return this.map[y][x];
   },
+  damageTile: function(x, y) {
+    this.map[y][x] = 13;
+    this.server.emit('set_tile', { x: x, y: y }, this.map[y][x]);
+  },
   tick: function() {
     this.bombs.forEach(function(bomb) {
       bomb.update();
@@ -119,6 +123,9 @@ const world = {
   notify: function(entity, event) {
     switch(event) {
       case 'bomb.explode':
+        var gridPos = this.coordsToGridPos(entity.pos);
+        this.damageTile(gridPos.x, gridPos.y);
+
         this.removeBomb(entity.id);
         entity.removeObserver(this, events.BOMB.EXPLODE);
       break;
