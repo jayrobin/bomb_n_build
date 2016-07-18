@@ -1,3 +1,4 @@
+const rnd = require ('randomstring');
 const events = require('./events');
 const Bomb = require('./bomb');
 
@@ -62,7 +63,7 @@ const world = {
   addBomb: function(x, y) {
     var pos = this.clipPosToGrid({x, y});
 
-    var bomb = new Bomb(pos.x, pos.y, this.bombs.length, this);
+    var bomb = new Bomb(rnd.generate(8), pos.x, pos.y, this);
     bomb.addObserver(this, events.BOMB.EXPLODE);
     this.bombs.push(bomb);
 

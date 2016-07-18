@@ -3,7 +3,7 @@ const Subject = require('./subject');
 
 const DELAY = 3000;
 
-function Bomb(x, y, id, world) {
+function Bomb(id, x, y, world) {
   Subject.call(this);
   this.pos = { x, y };
   this.id = id;
