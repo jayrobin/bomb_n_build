@@ -58,5 +58,25 @@ LocalPlayer.prototype.dropBomb = function() {
 };
 
 LocalPlayer.prototype.upgradeTile = function() {
-  Client.upgradeTile(this.x, this.y);
+  Client.upgradeTile(this.x, this.y, this.getDirection());
+};
+
+LocalPlayer.prototype.getDirection = function() {
+  switch (this.body.facing) {
+    case 1:
+      return { x: -1, y: 0 };
+      break;
+    case 2:
+      return { x: 1, y: 0 };
+      break;
+    case 3:
+      return { x: 0, y: -1 };
+      break;
+    case 4:
+      return { x: 0, y: 1 };
+      break;
+    default:
+      return { x: 0, y: 0 };
+      break;
+  }
 };

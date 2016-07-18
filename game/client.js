@@ -55,8 +55,10 @@ Client.prototype.handleDropBomb = function(pos) {
   }
 };
 
-Client.prototype.handleUpgradeTile = function(pos) {
+Client.prototype.handleUpgradeTile = function(pos, direction) {
   var gridPos = world.coordsToGridPos(pos);
+  gridPos.x += direction.x;
+  gridPos.y += direction.y;
   console.log(`Upgrading tile at ${gridPos.x}, ${gridPos.y}`);
   var tileState = world.upgradeTile(gridPos.x, gridPos.y);
   this.io.emit('set_tile', gridPos, tileState);
