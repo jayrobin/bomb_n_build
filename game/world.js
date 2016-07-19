@@ -93,10 +93,23 @@ const world = {
     }
     return this.map[y][x];
   },
-  damageTile: function(x, y) {
+  damageTile: function(x, y, amount) {
+    amount = amount || 1;
+
     if (this.map[y][x] > 0) {
-      this.map[y][x] -= 1;
+      this.map[y][x] = Math.max(1, this.map[y][x] - amount);
       this.server.emit('set_tile', { x: x, y: y }, this.map[y][x]);
+    }
+  },
+  createExplosion: function(x, y) {
+    for (var gy = y - 1; gy <= y + 1; gy++) {
+      for (var gx = x - 1; gx <= x + 1; gx++) {
+        if (gx === x && gy === y) {
+          this.damageTile(gx, gy, 2);
+        } else {
+          this.damageTile(gx, gy, 1);
+        }
+      }
     }
   },
   tick: function() {
@@ -144,8 +157,7 @@ const world = {
     switch(event) {
       case 'bomb.explode':
         var gridPos = this.coordsToGridPos(entity.pos);
-        this.damageTile(gridPos.x, gridPos.y);
-
+        this.createExplosion(gridPos.x, gridPos.y);
         this.removeBomb(entity.id);
         entity.removeObserver(this, events.BOMB.EXPLODE);
       break;
