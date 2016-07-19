@@ -20,6 +20,7 @@ var playState = {
       });
 
       this.game.physics.arcade.collide(this.players, this.world.tiles);
+      this.game.physics.arcade.overlap(this.players, this.explosions, this.handlePlayerExplosionOverlap, null, this);
     }
   },
   createPlayer: function(x, y) {
@@ -69,6 +70,9 @@ var playState = {
     } else {
       explosion.init(x, y);
     }
+  },
+  handlePlayerExplosionOverlap: function(player, _explosion) {
+    player.kill();
   },
   setTile: function(x, y, tileState) {
     this.world.setTile(x, y, tileState);

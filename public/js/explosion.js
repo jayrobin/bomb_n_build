@@ -2,6 +2,7 @@ function Explosion(x, y) {
   Phaser.Sprite.call(this, game, x, y, 'explosion');
   this.setupAnimations();
   this.init(x, y);
+  game.physics.arcade.enable(this);
 };
 
 Explosion.prototype = Object.create(Phaser.Sprite.prototype);

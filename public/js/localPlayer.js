@@ -17,12 +17,14 @@ LocalPlayer.prototype.setupControls = function() {
 };
 
 LocalPlayer.prototype.update = function() {
-  this.updateInput();
-  this.updatePos();
-  this.updateAnim(this.input.keys.up ||
-                  this.input.keys.down ||
-                  this.input.keys.left ||
-                  this.input.keys.right);
+  if (this.alive) {
+    this.updateInput();
+    this.updatePos();
+    this.updateAnim(this.input.keys.up ||
+                    this.input.keys.down ||
+                    this.input.keys.left ||
+                    this.input.keys.right);
+  }
 };
 
 LocalPlayer.prototype.updateInput = function() {
@@ -55,9 +57,13 @@ LocalPlayer.prototype.updateInput = function() {
 };
 
 LocalPlayer.prototype.dropBomb = function() {
-  Client.dropBomb(this.x, this.y);
+  if (this.alive) {
+    Client.dropBomb(this.x, this.y);
+  }
 };
 
 LocalPlayer.prototype.upgradeTile = function() {
-  Client.upgradeTile(this.x, this.y, this.getDirection());
+  if (this.alive) {
+    Client.upgradeTile(this.x, this.y, this.getDirection());
+  }
 };
