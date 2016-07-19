@@ -49,9 +49,11 @@ Client.prototype.handleUpdateInput = function(input, pos) {
 Client.prototype.handleDropBomb = function(pos) {
   if (this.bombDropTimer === 0) {
     var bomb = world.addBomb(pos.x, pos.y);
-    console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
-    this.io.emit('drop_bomb', bomb.id, bomb.pos);
-    this.bombDropTimer = BOMB_DROP_DELAY;
+    if (bomb) {
+      console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
+      this.io.emit('drop_bomb', bomb.id, bomb.pos);
+      this.bombDropTimer = BOMB_DROP_DELAY;
+    }
   }
 };
 

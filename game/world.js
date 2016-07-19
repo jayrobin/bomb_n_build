@@ -63,11 +63,12 @@ const world = {
   addBomb: function(x, y) {
     var pos = this.clipPosToGrid({x, y});
 
-    var bomb = new Bomb(rnd.generate(8), pos.x, pos.y, this);
-    bomb.addObserver(this, events.BOMB.EXPLODE);
-    this.bombs.push(bomb);
-
-    return bomb;
+    if (this.isValidBombPosition(pos)) {
+      var bomb = new Bomb(rnd.generate(8), pos.x, pos.y, this);
+      bomb.addObserver(this, events.BOMB.EXPLODE);
+      this.bombs.push(bomb);
+      return bomb;
+    }
   },
   removeBomb: function(id) {
     for (var i = 0; i < this.bombs.length; i++) {
@@ -128,6 +129,16 @@ const world = {
     };
 
     return gridPos;
+  },
+  isValidBombPosition: function(pos) {
+    for (var i = 0; i < this.bombs.length; i++) {
+      var bomb = this.bombs[i];
+      if (bomb.pos.x === pos.x && bomb.pos.y === pos.y) {
+        return false;
+      }
+    }
+
+    return true;
   },
   notify: function(entity, event) {
     switch(event) {
