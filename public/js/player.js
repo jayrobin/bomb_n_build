@@ -7,6 +7,8 @@ Player.prototype.initialize = function() {
   this.SPEED = 100;
   this.setupInput();
   this.setupAnimations();
+  this.anchor.setTo(0.5, 0.5);
+  game.physics.arcade.enable(this);
 };
 
 Player.prototype.setupInput = function() {

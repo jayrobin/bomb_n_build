@@ -1,9 +1,7 @@
 function LocalPlayer(x, y) {
   Phaser.Sprite.call(this, game, x, y, 'player');
   this.initialize();
-  game.physics.arcade.enable(this);
   this.cursor = game.input.keyboard.createCursorKeys();
-  this.anchor.setTo(0.5, 0.5);
   this.setupControls();
 }
 
