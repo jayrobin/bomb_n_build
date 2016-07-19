@@ -9,6 +9,7 @@ var playState = {
     this.world.setTiles(mapData);
     this.bombs = game.add.group();
     this.players = game.add.group();
+    this.explosions = game.add.group();
   },
   update: function() {
     if (this.running) {
@@ -59,6 +60,15 @@ var playState = {
         return;
       }
     });
+  },
+  addExplosion: function(x, y) {
+    var explosion = this.explosions.getFirstDead();
+
+    if (!explosion) {
+      this.explosions.add(new Explosion(x, y));
+    } else {
+      explosion.init(x, y);
+    }
   },
   setTile: function(x, y, tileState) {
     this.world.setTile(x, y, tileState);

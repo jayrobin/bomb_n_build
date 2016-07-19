@@ -13,6 +13,7 @@ var Client = {
     this.socket.on('drop_bomb', this.handleDropBomb.bind(this));
     this.socket.on('remove_bomb', this.handleRemoveBomb.bind(this));
     this.socket.on('set_tile', this.handleSetTile.bind(this));
+    this.socket.on('create_explosions', this.handleCreateExplosions.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -33,7 +34,7 @@ var Client = {
   handleCurrentPlayers: function(players) {
     players.forEach(function(player) {
       this.handleAddPlayer(player.id, player.pos);
-    }.bind(this));
+    }, this);
   },
   handleRemovePlayer: function(id) {
     console.log("Removing net player " + id);
@@ -51,7 +52,7 @@ var Client = {
   handleCurrentBombs: function(bombs) {
     bombs.forEach(function(bomb) {
       this.handleDropBomb(bomb.id, bomb.pos);
-    }.bind(this));
+    }, this);
   },
   handleRemoveBomb: function(id) {
     console.log("Removing bomb " + id);
@@ -60,6 +61,11 @@ var Client = {
   handleSetTile: function(pos, tileState) {
     console.log("Setting tile " + pos.x + ", " + pos.y + " (" + tileState + ")");
     this.game.setTile(pos.x, pos.y, tileState);
+  },
+  handleCreateExplosions: function(explosions) {
+    explosions.forEach(function(explosion) {
+      this.game.addExplosion(explosion.x, explosion.y);
+    }, this);
   },
   updateInput: function(input, pos) {
     this.socket.emit('update_input', input, pos);

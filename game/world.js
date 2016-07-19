@@ -102,8 +102,10 @@ const world = {
     }
   },
   createExplosion: function(x, y) {
+    var explosions = []
     for (var gy = y - 1; gy <= y + 1; gy++) {
       for (var gx = x - 1; gx <= x + 1; gx++) {
+        explosions.push({ x: gx * this.CELL_SIZE, y: gy * this.CELL_SIZE });
         if (gx === x && gy === y) {
           this.damageTile(gx, gy, 2);
         } else {
@@ -111,6 +113,7 @@ const world = {
         }
       }
     }
+    this.server.emit('create_explosions', explosions);
   },
   tick: function() {
     this.bombs.forEach(function(bomb) {
