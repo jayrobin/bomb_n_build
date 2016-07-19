@@ -18,7 +18,7 @@ var playState = {
         player.update();
       });
 
-      this.game.physics.arcade.collide(this.player, this.world.tiles);
+      this.game.physics.arcade.collide(this.players, this.world.tiles);
     }
   },
   createPlayer: function(x, y) {

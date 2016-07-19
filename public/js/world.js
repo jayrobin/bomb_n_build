@@ -18,7 +18,7 @@ World.prototype.setTiles = function(tileArr) {
     }
   }
 
-  this.map.setCollision([1], true, this.tiles);
+  this.map.setCollision([0, 1, 5, 6, 7, 8], true, this.tiles);
 };
 
 World.prototype.setTile = function(x, y, tileState) {
