@@ -1,7 +1,6 @@
-function LocalPlayer(x, y, game) {
+function LocalPlayer(x, y) {
   Phaser.Sprite.call(this, game, x, y, 'player');
   this.initialize();
-  this.game = game;
   game.physics.arcade.enable(this);
   this.cursor = game.input.keyboard.createCursorKeys();
   this.anchor.setTo(0.5, 0.5);
@@ -22,6 +21,10 @@ LocalPlayer.prototype.setupControls = function() {
 LocalPlayer.prototype.update = function() {
   this.updateInput();
   this.updatePos();
+  this.updateAnim(this.input.keys.up ||
+                  this.input.keys.down ||
+                  this.input.keys.left ||
+                  this.input.keys.right);
 };
 
 LocalPlayer.prototype.updateInput = function() {
@@ -59,24 +62,4 @@ LocalPlayer.prototype.dropBomb = function() {
 
 LocalPlayer.prototype.upgradeTile = function() {
   Client.upgradeTile(this.x, this.y, this.getDirection());
-};
-
-LocalPlayer.prototype.getDirection = function() {
-  switch (this.body.facing) {
-    case 1:
-      return { x: -1, y: 0 };
-      break;
-    case 2:
-      return { x: 1, y: 0 };
-      break;
-    case 3:
-      return { x: 0, y: -1 };
-      break;
-    case 4:
-      return { x: 0, y: 1 };
-      break;
-    default:
-      return { x: 0, y: 0 };
-      break;
-  }
 };

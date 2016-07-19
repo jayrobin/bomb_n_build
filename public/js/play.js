@@ -22,7 +22,7 @@ var playState = {
     }
   },
   createPlayer: function(x, y) {
-    this.player = new LocalPlayer(x, y, this);
+    this.player = new LocalPlayer(x, y);
     this.players.add(this.player);
     game.camera.follow(this.player);
   },
