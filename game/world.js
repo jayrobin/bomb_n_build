@@ -70,11 +70,11 @@ const world = {
       return { id: bomb.id, pos: bomb.pos };
     });
   },
-  addBomb: function(x, y) {
+  addBomb: function(player, x, y) {
     var pos = this.clipPosToGrid({x, y});
 
     if (this.isValidBombPosition(pos)) {
-      var bomb = new Bomb(rnd.generate(8), pos.x, pos.y, this);
+      var bomb = new Bomb(player, rnd.generate(8), pos.x, pos.y, this);
       bomb.addObserver(this, events.BOMB.EXPLODE);
       this.bombs.push(bomb);
       return bomb;
