@@ -9,6 +9,7 @@ Player.prototype.initialize = function() {
   this.setupAnimations();
   this.anchor.setTo(0.5, 0.5);
   game.physics.arcade.enable(this);
+  this.body.setSize(24, 28, 4, 4);
 };
 
 Player.prototype.resetInput = function() {
