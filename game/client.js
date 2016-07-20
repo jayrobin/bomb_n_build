@@ -26,7 +26,33 @@ Client.prototype.setupListeners = function() {
   this.socket.on('disconnect', this.handleDisconnection.bind(this));
   this.socket.on('update_input', this.handleUpdateInput.bind(this));
   this.socket.on('drop_bomb', this.handleDropBomb.bind(this));
-  this.socket.on('upgrade_tile', this.handleUpgradeTile.bind(this));
+  this.socket.on('start_building', this.handleStartBuilding.bind(this));
+  this.socket.on('stop_building', this.handleStopBuilding.bind(this));
+};
+
+Client.prototype.handleStartBuilding = function(pos, direction) {
+  var gridPos = world.coordsToGridPos(pos);
+  gridPos.x += direction.x;
+  gridPos.y += direction.y;
+
+  if (!this.buildingTile) {
+    world.stopBuilding(gridPos.x, gridPos.y);
+  }
+
+  this.buildingTile = world.getTile(gridPos.x, gridPos.y);
+  world.startBuilding(gridPos.x, gridPos.y);
+};
+
+Client.prototype.handleStopBuilding = function(pos, direction) {
+  if (!this.buildingTile) {
+    var gridPos = world.coordsToGridPos(pos);
+    gridPos.x += direction.x;
+    gridPos.y += direction.y;
+    world.stopBuilding(gridPos.x, gridPos.y);
+  } else {
+    var gridPos = this.buildingTile.pos;
+    world.stopBuilding(gridPos.x, gridPos.y);
+  }
 };
 
 Client.prototype.handleDisconnection = function() {
@@ -57,18 +83,12 @@ Client.prototype.handleDropBomb = function(pos) {
   }
 };
 
-Client.prototype.handleUpgradeTile = function(pos, direction) {
-  var gridPos = world.coordsToGridPos(pos);
-  gridPos.x += direction.x;
-  gridPos.y += direction.y;
-  console.log(`Upgrading tile at ${gridPos.x}, ${gridPos.y}`);
-  var tileState = world.upgradeTile(gridPos.x, gridPos.y);
-  this.io.emit('set_tile', gridPos, tileState);
-};
-
 Client.prototype.update = function() {
   if (this.active) {
     this.tickBombDropTimer();
+    if (!!this.buildingTile) {
+      this.buildingTile.update();
+    }
   }
 };
 

@@ -68,8 +68,16 @@ LocalPlayer.prototype.dropBomb = function() {
   }
 };
 
-LocalPlayer.prototype.upgradeTile = function() {
+LocalPlayer.prototype.onBuildKeyDown = function() {
   if (this.alive) {
-    Client.upgradeTile(this.x, this.y, this.getDirection());
+    this.building = true;
+    Client.startBuilding(this.x, this.y, this.getDirection());
+  }
+};
+
+LocalPlayer.prototype.onBuildKeyUp = function() {
+  if (this.alive) {
+    this.building = false;
+    Client.stopBuilding(this.x, this.y, this.getDirection());
   }
 };

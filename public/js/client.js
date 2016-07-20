@@ -73,7 +73,10 @@ var Client = {
   dropBomb: function(x, y) {
     this.socket.emit('drop_bomb', { x: x, y: y });
   },
-  upgradeTile: function(x, y, direction) {
-    this.socket.emit('upgrade_tile', { x: x, y: y }, direction);
+  startBuilding: function(x, y, direction) {
+    this.socket.emit('start_building', { x: x, y: y }, direction);
+  },
+  stopBuilding: function(x, y, direction) {
+    this.socket.emit('stop_building', { x: x, y: y }, direction);
   }
 };

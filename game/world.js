@@ -31,11 +31,13 @@ const world = {
     this.server = server;
   },
   buildMap: function() {
-    this.map = this.map.map(function(row) {
-      return row.map(function(cell) {
-        return new Tile(cell);
-      });
-    });
+    this.map = this.map.map(function(row, y) {
+      return row.map(function(cell, x) {
+        var tile = new Tile({ x: x, y: y }, cell, world);
+        tile.addObserver(this, events.TILE.UPGRADE);
+        return tile;
+      }, this);
+    }, this);
   },
   getRandomPos: function() {
     var pos = {};
@@ -90,8 +92,17 @@ const world = {
 
     return false;
   },
+  getTile: function(x, y) {
+    return this.map[y][x];
+  },
   upgradeTile: function(x, y) {
     return this.map[y][x].upgrade();
+  },
+  startBuilding: function(x, y) {
+    this.map[y][x].startBuilding();
+  },
+  stopBuilding: function(x, y) {
+    this.map[y][x].stopBuilding();
   },
   damageTile: function(x, y, amount) {
     amount = amount || 1;
@@ -165,11 +176,14 @@ const world = {
   },
   notify: function(entity, event) {
     switch(event) {
-      case 'bomb.explode':
+      case events.BOMB.EXPLODE:
         var gridPos = this.coordsToGridPos(entity.pos);
         this.createExplosion(gridPos.x, gridPos.y);
         this.removeBomb(entity.id);
         entity.removeObserver(this, events.BOMB.EXPLODE);
+      break;
+      case events.TILE.UPGRADE:
+        this.server.emit('set_tile', entity.pos, entity.type);
       break;
     }
   }
