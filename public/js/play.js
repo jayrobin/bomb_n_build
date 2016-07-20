@@ -10,6 +10,7 @@ var playState = {
     this.bombs = game.add.group();
     this.players = game.add.group();
     this.explosions = game.add.group();
+    this.setupUI();
   },
   update: function() {
     if (this.running) {
@@ -72,6 +73,9 @@ var playState = {
     }
   },
   handlePlayerExplosionOverlap: function(player, _explosion) {
+    if (player === this.player) {
+      this.showDeathScreen();
+    }
     player.kill();
   },
   setTile: function(x, y, tileState) {
@@ -79,5 +83,23 @@ var playState = {
   },
   start: function() {
     this.running = true;
+  },
+  setupUI: function() {
+    this.respawnLabel = game.add.text(240, 170, "Press ENTER to respawn", { font: "32px Arial", fill: "#ffffff", align: "center" });
+    this.respawnLabel.fixedToCamera = true;
+    this.respawnLabel.anchor.setTo(0.5, 0.5);
+    this.respawnLabel.visible = false;
+
+    var spawnKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+    spawnKey.onDown.add(this.spawnPlayer, this);
+  },
+  showDeathScreen: function() {
+    this.respawnLabel.visible = true;
+  },
+  spawnPlayer: function() {
+    if (!this.player.alive) {
+      this.respawnLabel.visible = false;
+      this.player.reset(this.player.x, this.player.y);
+    }
   }
 };
