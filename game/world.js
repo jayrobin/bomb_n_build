@@ -96,18 +96,18 @@ const world = {
     return this.map[y][x];
   },
   upgradeTile: function(x, y) {
-    return this.map[y][x].upgrade();
+    return this.getTile(x, y).upgrade();
   },
   startBuilding: function(x, y) {
-    this.map[y][x].startBuilding();
+    this.getTile(x, y).startBuilding();
   },
   stopBuilding: function(x, y) {
-    this.map[y][x].stopBuilding();
+    this.getTile(x, y).stopBuilding();
   },
   damageTile: function(x, y, amount) {
     amount = amount || 1;
 
-    var tileType = this.map[y][x].damage(amount);
+    var tileType = this.getTile(x, y).damage(amount);
     if (tileType >= 0) {
       this.server.emit('set_tile', { x: x, y: y }, tileType);
     }
