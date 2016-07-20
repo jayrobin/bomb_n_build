@@ -15,6 +15,7 @@ var Client = {
     this.socket.on('set_tile', this.handleSetTile.bind(this));
     this.socket.on('create_explosions', this.handleCreateExplosions.bind(this));
     this.socket.on('player_respawn', this.handlePlayerRespawn.bind(this));
+    this.socket.on('set_tile_build_speed', this.handleSetTileBuildSpeed.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -62,6 +63,9 @@ var Client = {
   handleSetTile: function(pos, tileState) {
     console.log("Setting tile " + pos.x + ", " + pos.y + " (" + tileState + ")");
     this.game.setTile(pos.x, pos.y, tileState);
+  },
+  handleSetTileBuildSpeed: function(pos, buildInfo) {
+    this.game.setBuildIndicator(pos.x, pos.y, buildInfo.time, buildInfo.totalTime, buildInfo.speed);
   },
   handleCreateExplosions: function(explosions) {
     explosions.forEach(function(explosion) {

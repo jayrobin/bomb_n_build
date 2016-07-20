@@ -3,6 +3,7 @@ var bootState = {
     game.load.spritesheet('player', 'assets/img/player.png', 32, 32, 12);
     game.load.spritesheet('enemy', 'assets/img/enemy.png', 32, 32, 12);
     game.load.spritesheet('explosion', 'assets/img/explosion.png', 32, 32, 8);
+    game.load.spritesheet('buildIndicator', 'assets/img/buildIndicator.png', 32, 32, 9);
     game.load.image('bomb', 'assets/img/bomb.png');
     game.load.image('tiles', 'assets/img/tiles.png');
   },

@@ -10,6 +10,7 @@ var playState = {
     this.bombs = game.add.group();
     this.players = game.add.group();
     this.explosions = game.add.group();
+    this.buildIndicators = game.add.group();
     this.setupUI();
   },
   update: function() {
@@ -72,6 +73,18 @@ var playState = {
       explosion.init(x, y);
     }
   },
+  addBuildIndicator: function(gridX, gridY) {
+    var buildIndicator = this.buildIndicators.getFirstDead();
+
+    if (!buildIndicator) {
+      buildIndicator = new BuildIndicator(gridX, gridY);
+      this.buildIndicators.add(buildIndicator);
+    } else {
+      buildIndicator.init(gridX, gridY);
+    }
+
+    return buildIndicator;
+  },
   handlePlayerExplosionOverlap: function(player, _explosion) {
     if (player === this.player) {
       this.showDeathScreen();
@@ -80,6 +93,19 @@ var playState = {
   },
   setTile: function(x, y, tileState) {
     this.world.setTile(x, y, tileState);
+  },
+  setBuildIndicator: function(x, y, time, totalTime, speed) {
+    var indicator = this.buildIndicators.filter(function(ind) {
+      if (ind.alive && x === ind.pos.x && y === ind.pos.y) {
+        return ind;
+      }
+    }).first;
+
+    if (!indicator) {
+      indicator = this.addBuildIndicator(x, y);
+    }
+
+    indicator.setSpeed(time, totalTime, speed);
   },
   start: function() {
     this.running = true;

@@ -15,6 +15,14 @@ function Tile(pos, type, world) {
 Tile.prototype = Object.create(Subject.prototype);
 Tile.prototype.constructor = Tile;
 
+Tile.prototype.getBuildInfo = function() {
+  return {
+    time: this.buildTimer,
+    totalTime: BUILD_DELAYS[this.type],
+    speed: this.numBuilders
+  }
+};
+
 Tile.prototype.damage = function(amount) {
   if (this.type > 1) {
     this.type = Math.max(1, this.type - amount);
@@ -48,7 +56,7 @@ Tile.prototype.stopBuilding = function() {
 
 Tile.prototype.update = function() {
   if (this.numBuilders > 0) {
-    this.buildTimer += this.world.getElapsed();
+    this.buildTimer += this.world.getElapsed() * this.numBuilders;
     if (this.buildTimer >= BUILD_DELAYS[this.type]) {
       this.upgrade();
       this.notify(this, events.TILE.UPGRADE);

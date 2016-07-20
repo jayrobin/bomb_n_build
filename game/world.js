@@ -99,10 +99,14 @@ const world = {
     return this.getTile(x, y).upgrade();
   },
   startBuilding: function(x, y) {
-    this.getTile(x, y).startBuilding();
+    var tile = this.getTile(x, y);
+    tile.startBuilding();
+    this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
   },
   stopBuilding: function(x, y) {
-    this.getTile(x, y).stopBuilding();
+    var tile = this.getTile(x, y);
+    tile.stopBuilding();
+    this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
   },
   damageTile: function(x, y, amount) {
     amount = amount || 1;
