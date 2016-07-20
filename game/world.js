@@ -91,22 +91,14 @@ const world = {
     return false;
   },
   upgradeTile: function(x, y) {
-    var oldTileState = this.map[y][x].type;
-    if (oldTileState > 0) {
-      if (oldTileState < 4) {
-        this.map[y][x].type = 4;
-      } else if (oldTileState < 8) {
-        this.map[y][x].type += 1;
-      }
-    }
-    return this.map[y][x].type;
+    return this.map[y][x].upgrade();
   },
   damageTile: function(x, y, amount) {
     amount = amount || 1;
 
-    if (this.map[y][x].type > 0) {
-      this.map[y][x].type = Math.max(1, this.map[y][x].type - amount);
-      this.server.emit('set_tile', { x: x, y: y }, this.map[y][x].type);
+    var tileType = this.map[y][x].damage(amount);
+    if (tileType >= 0) {
+      this.server.emit('set_tile', { x: x, y: y }, tileType);
     }
   },
   createExplosion: function(x, y) {
