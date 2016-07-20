@@ -24,8 +24,8 @@ var playState = {
       this.game.physics.arcade.overlap(this.players, this.explosions, this.handlePlayerExplosionOverlap, null, this);
     }
   },
-  createPlayer: function(x, y) {
-    this.player = new LocalPlayer(x, y);
+  createPlayer: function(id, x, y) {
+    this.player = new LocalPlayer(id, x, y);
     this.players.add(this.player);
     game.camera.follow(this.player);
   },
@@ -99,7 +99,7 @@ var playState = {
   spawnPlayer: function() {
     if (!this.player.alive) {
       this.respawnLabel.visible = false;
-      this.player.reset(this.player.x, this.player.y);
+      this.player.initRespawn();
     }
   }
 };

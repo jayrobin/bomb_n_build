@@ -22,6 +22,10 @@ Player.prototype.resetInput = function() {
   };
 };
 
+Player.prototype.respawn = function(x, y) {
+  this.reset(x, y);
+};
+
 Player.prototype.setupAnimations = function() {
   this.animations.add('up_idle', [0], 20, true, true);
   this.animations.add('up_walk', [1, 2], 20, true, true);

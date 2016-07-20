@@ -1,6 +1,7 @@
-function LocalPlayer(x, y) {
+function LocalPlayer(id, x, y) {
   Phaser.Sprite.call(this, game, x, y, 'player');
   this.initialize();
+  this.id = id;
   this.cursor = game.input.keyboard.createCursorKeys();
   this.setupControls();
 }
@@ -66,6 +67,10 @@ LocalPlayer.prototype.dropBomb = function() {
   if (this.alive) {
     Client.dropBomb(this.x, this.y);
   }
+};
+
+LocalPlayer.prototype.initRespawn = function() {
+  Client.respawn();
 };
 
 LocalPlayer.prototype.onBuildKeyDown = function() {

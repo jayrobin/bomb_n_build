@@ -26,8 +26,15 @@ Client.prototype.setupListeners = function() {
   this.socket.on('disconnect', this.handleDisconnection.bind(this));
   this.socket.on('update_input', this.handleUpdateInput.bind(this));
   this.socket.on('drop_bomb', this.handleDropBomb.bind(this));
+  this.socket.on('respawn', this.handleRespawn.bind(this));
   this.socket.on('start_building', this.handleStartBuilding.bind(this));
   this.socket.on('stop_building', this.handleStopBuilding.bind(this));
+};
+
+Client.prototype.handleRespawn = function() {
+  var pos = world.getRandomPos();
+  this.pos = pos;
+  this.io.emit('player_respawn', this.id, this.pos);
 };
 
 Client.prototype.handleStartBuilding = function(pos, direction) {

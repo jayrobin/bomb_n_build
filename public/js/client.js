@@ -2,7 +2,7 @@ var Client = {
   connect: function(game) {
     this.game = game;
     this.socket = io();
-    this.socket.on('register_id', this.handleRegisterID);
+    this.socket.on('register_id', this.handleRegisterID.bind(this));
     this.socket.on('set_initial_pos', this.handleSetInitialPos.bind(this));
     this.socket.on('add_player', this.handleAddPlayer.bind(this));
     this.socket.on('map_state', this.handleMapState.bind(this));
@@ -14,6 +14,7 @@ var Client = {
     this.socket.on('remove_bomb', this.handleRemoveBomb.bind(this));
     this.socket.on('set_tile', this.handleSetTile.bind(this));
     this.socket.on('create_explosions', this.handleCreateExplosions.bind(this));
+    this.socket.on('player_respawn', this.handlePlayerRespawn.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -21,7 +22,7 @@ var Client = {
   },
   handleSetInitialPos: function(pos) {
     console.log("Setting initial pos: " + pos.x + ", " + pos.y);
-    this.game.createPlayer(pos.x, pos.y);
+    this.game.createPlayer(this.id, pos.x, pos.y);
     this.game.start();
   },
   handleMapState: function(map) {
@@ -67,11 +68,18 @@ var Client = {
       this.game.addExplosion(explosion.x, explosion.y);
     }, this);
   },
+  handlePlayerRespawn: function(id, pos) {
+    var player = this.game.findPlayerById(id);
+    player.respawn(pos.x, pos.y);
+  },
   updateInput: function(input, pos) {
     this.socket.emit('update_input', input, pos);
   },
   dropBomb: function(x, y) {
     this.socket.emit('drop_bomb', { x: x, y: y });
+  },
+  respawn: function() {
+    this.socket.emit('respawn');
   },
   startBuilding: function(x, y, direction) {
     this.socket.emit('start_building', { x: x, y: y }, direction);
