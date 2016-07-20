@@ -1,6 +1,7 @@
 const rnd = require ('randomstring');
 const events = require('./events');
 const Bomb = require('./bomb');
+const Tile = require('./tile');
 
 const world = {
   WIDTH: 500,
@@ -28,6 +29,13 @@ const world = {
   lastTick: new Date().getTime(),
   setServer: function(server) {
     this.server = server;
+  },
+  buildMap: function() {
+    this.map = this.map.map(function(row) {
+      return row.map(function(cell) {
+        return new Tile(cell);
+      });
+    });
   },
   getRandomPos: function() {
     var pos = {};
@@ -83,22 +91,22 @@ const world = {
     return false;
   },
   upgradeTile: function(x, y) {
-    var oldTileState = this.map[y][x];
+    var oldTileState = this.map[y][x].type;
     if (oldTileState > 0) {
       if (oldTileState < 4) {
-        this.map[y][x] = 4;
+        this.map[y][x].type = 4;
       } else if (oldTileState < 8) {
-        this.map[y][x] += 1;
+        this.map[y][x].type += 1;
       }
     }
-    return this.map[y][x];
+    return this.map[y][x].type;
   },
   damageTile: function(x, y, amount) {
     amount = amount || 1;
 
-    if (this.map[y][x] > 0) {
-      this.map[y][x] = Math.max(1, this.map[y][x] - amount);
-      this.server.emit('set_tile', { x: x, y: y }, this.map[y][x]);
+    if (this.map[y][x].type > 0) {
+      this.map[y][x].type = Math.max(1, this.map[y][x].type - amount);
+      this.server.emit('set_tile', { x: x, y: y }, this.map[y][x].type);
     }
   },
   createExplosion: function(x, y) {
@@ -155,6 +163,13 @@ const world = {
     }
 
     return true;
+  },
+  getMapData: function() {
+    return this.map.map(function(row) {
+      return row.map(function(tile) {
+        return tile.type;
+      });
+    });
   },
   notify: function(entity, event) {
     switch(event) {

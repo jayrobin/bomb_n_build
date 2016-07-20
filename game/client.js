@@ -14,7 +14,7 @@ function Client(id, socket, io) {
 Client.prototype.initialize = function() {
   this.setupListeners();
   this.socket.emit('register_id', this.id);
-  this.socket.emit('map_state', world.map);
+  this.socket.emit('map_state', world.getMapData());
   this.setInitialPos(world.getRandomPos());
   this.socket.emit('current_players', world.getClientPositions());
   this.socket.emit('current_bombs', world.getBombPositions());
