@@ -12,13 +12,14 @@ LocalPlayer.prototype.setupControls = function() {
   var dropBomb = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
   dropBomb.onDown.add(this.dropBomb, this);
 
-  var upgradeTile = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
-  upgradeTile.onDown.add(this.upgradeTile, this);
+  var buildKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
+  buildKey.onDown.add(this.onBuildKeyDown, this);
+  buildKey.onUp.add(this.onBuildKeyUp, this);
 };
 
 LocalPlayer.prototype.update = function() {
   if (this.alive) {
-    this.updateInput();
+    this.updateInput(this.building);
     this.updatePos();
     this.updateAnim(this.input.keys.up ||
                     this.input.keys.down ||
@@ -27,28 +28,33 @@ LocalPlayer.prototype.update = function() {
   }
 };
 
-LocalPlayer.prototype.updateInput = function() {
+LocalPlayer.prototype.updateInput = function(stop) {
   var inputDelta = {
     keys: {}
   };
 
   var update = false;
 
-  if (this.input.keys.up !== this.cursor.up.isDown) {
-    this.input.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
+  if (stop) {
     update = true;
-  }
-  if (this.input.keys.down !== this.cursor.down.isDown) {
-    this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
-    update = true;
-  }
-  if (this.input.keys.left !== this.cursor.left.isDown) {
-    this.input.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
-    update = true;
-  }
-  if (this.input.keys.right !== this.cursor.right.isDown) {
-    this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
-    update = true;
+    this.resetInput();
+  } else {
+    if (this.input.keys.up !== this.cursor.up.isDown) {
+      this.input.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
+      update = true;
+    }
+    if (this.input.keys.down !== this.cursor.down.isDown) {
+      this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
+      update = true;
+    }
+    if (this.input.keys.left !== this.cursor.left.isDown) {
+      this.input.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
+      update = true;
+    }
+    if (this.input.keys.right !== this.cursor.right.isDown) {
+      this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
+      update = true;
+    }
   }
 
   if (update) {

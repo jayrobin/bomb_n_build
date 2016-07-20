@@ -5,13 +5,13 @@ Player.prototype.constructor = Player;
 
 Player.prototype.initialize = function() {
   this.SPEED = 100;
-  this.setupInput();
+  this.resetInput();
   this.setupAnimations();
   this.anchor.setTo(0.5, 0.5);
   game.physics.arcade.enable(this);
 };
 
-Player.prototype.setupInput = function() {
+Player.prototype.resetInput = function() {
   this.input = {
     keys: {
       up: false,
