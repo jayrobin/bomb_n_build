@@ -118,9 +118,29 @@ var playState = {
 
     var spawnKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     spawnKey.onDown.add(this.spawnPlayer, this);
+
+    this.playerListLabel = game.add.text(240, 170, "Test", { font: "32px Arial", fill: "#ffffff", align: "center" });
+    this.playerListLabel.fixedToCamera = true;
+    this.playerListLabel.anchor.setTo(0.5, 0.5);
+    this.playerListLabel.visible = false;
+
+    var showAllPlayersKey = game.input.keyboard.addKey(Phaser.Keyboard.TAB);
+    showAllPlayersKey.onDown.add(this.showPlayerList, this);
+    showAllPlayersKey.onUp.add(this.hidePlayerList, this);
   },
   showDeathScreen: function() {
     this.respawnLabel.visible = true;
+  },
+  showPlayerList: function() {
+    var playerList = "";
+    this.players.forEach(function(player) {
+      playerList += player.id + "\n";
+    });
+    this.playerListLabel.text = playerList;
+    this.playerListLabel.visible = true;
+  },
+  hidePlayerList: function() {
+    this.playerListLabel.visible = false;
   },
   spawnPlayer: function() {
     if (!this.player.alive) {
