@@ -42,7 +42,8 @@ Client.prototype.handleStartBuilding = function(pos, direction) {
   gridPos.x += direction.x;
   gridPos.y += direction.y;
 
-  if (!this.buildingTile) {
+  if (this.buildingTile) {
+    var gridPos = this.buildingTile.pos;
     world.stopBuilding(gridPos.x, gridPos.y);
   }
 
@@ -59,6 +60,7 @@ Client.prototype.handleStopBuilding = function(pos, direction) {
   } else {
     var gridPos = this.buildingTile.pos;
     world.stopBuilding(gridPos.x, gridPos.y);
+    this.buildingTile = null;
   }
 };
 
@@ -66,6 +68,12 @@ Client.prototype.handleDisconnection = function() {
   console.log(`Client disconnected ${this.id}`);
   world.removeClient(this.id);
   this.socket.broadcast.emit('remove_player', this.id);
+
+  if (this.buildingTile) {
+    var gridPos = this.buildingTile.pos;
+    world.stopBuilding(gridPos.x, gridPos.y);
+    this.buildingTile = null;
+  }
 };
 
 Client.prototype.setInitialPos = function(pos) {

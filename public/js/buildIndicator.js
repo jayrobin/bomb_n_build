@@ -24,6 +24,6 @@ BuildIndicator.prototype.setSpeed = function(time, totalTime, speed) {
     this.kill();
   } else {
     this.animations.currentFrame = Math.floor(time / totalTime) * this.animations.frameTotal;
-    this.animations.getAnimation('build').delay = Math.floor((totalTime - time) / (this.animations.frameTotal - 1));
+    this.animations.getAnimation('build').delay = (Math.floor(totalTime / (this.animations.frameTotal - 1))) / speed;
   }
 };
