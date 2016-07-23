@@ -188,6 +188,7 @@ const world = {
       break;
       case events.TILE.UPGRADE:
         this.server.emit('set_tile', entity.pos, entity.type);
+        this.server.emit('set_tile_build_speed', entity.pos, entity.getBuildInfo());
       break;
     }
   }
