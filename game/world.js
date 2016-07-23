@@ -108,6 +108,14 @@ const world = {
     tile.stopBuilding();
     this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
   },
+  getBuilders: function() {
+    return this.clients.filter(function(client) {
+      return !!client.buildingTile;
+    }).map(function(builder) {
+      var tile = builder.buildingTile;
+      return { pos: tile.pos, buildInfo: tile.getBuildInfo() };
+    });
+  },
   damageTile: function(x, y, amount) {
     amount = amount || 1;
 

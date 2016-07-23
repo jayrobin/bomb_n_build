@@ -18,6 +18,7 @@ Client.prototype.initialize = function() {
   this.setInitialPos(world.getRandomPos());
   this.socket.emit('current_players', world.getClientPositions());
   this.socket.emit('current_bombs', world.getBombPositions());
+  this.socket.emit('current_building_tiles', world.getBuilders());
   this.bombDropTimer = 0;
   this.active = true;
 };

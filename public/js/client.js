@@ -16,6 +16,7 @@ var Client = {
     this.socket.on('create_explosions', this.handleCreateExplosions.bind(this));
     this.socket.on('player_respawn', this.handlePlayerRespawn.bind(this));
     this.socket.on('set_tile_build_speed', this.handleSetTileBuildSpeed.bind(this));
+    this.socket.on('current_building_tiles', this.handleCurrentBuildingTiles.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -90,5 +91,10 @@ var Client = {
   },
   stopBuilding: function(x, y, direction) {
     this.socket.emit('stop_building', { x: x, y: y }, direction);
+  },
+  handleCurrentBuildingTiles: function(tiles) {
+    tiles.forEach(function(tile) {
+      this.game.setBuildIndicator(tile.pos.x, tile.pos.y, tile.buildInfo.time, tile.buildInfo.totalTime, tile.buildInfo.speed);
+    }.bind(this));
   }
 };
