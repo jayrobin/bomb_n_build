@@ -16,8 +16,10 @@ NetPlayer.prototype.update = function() {
   this.updateAnim(this.body.velocity.x !== 0 || this.body.velocity.y !== 0);
 };
 
-NetPlayer.prototype.updateInput = function(input) {
+NetPlayer.prototype.updateInput = function(input, pos) {
   if (input.keys) {
     this.input = input;
   }
+  this.x = pos.x;
+  this.y = pos.y;
 };

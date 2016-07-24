@@ -43,10 +43,10 @@ var Client = {
     console.log("Removing net player " + id);
     this.game.removeNetPlayer(id);
   },
-  handleUpdateInput: function(id, input) {
+  handleUpdateInput: function(id, input, pos) {
     var player = this.game.findPlayerById(id);
     if (player) {
-      player.updateInput(input);
+      player.updateInput(input, pos);
     }
   },
   handleDropBomb: function(id, pos, fuse) {

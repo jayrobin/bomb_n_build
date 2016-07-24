@@ -85,7 +85,7 @@ Client.prototype.setInitialPos = function(pos) {
 
 Client.prototype.handleUpdateInput = function(input, pos) {
   this.pos = pos;
-  this.socket.broadcast.emit('update_input', this.id, input);
+  this.socket.broadcast.emit('update_input', this.id, input, pos);
 };
 
 Client.prototype.handleDropBomb = function(pos) {
