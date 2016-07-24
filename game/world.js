@@ -152,8 +152,15 @@ const world = {
       this.server.emit('set_tile', { x: x, y: y }, tileType);
     }
   },
+  detonateBomb: function(bomb) {
+    var gridPos = this.coordsToGridPos(bomb.pos);
+    this.createExplosion(gridPos.x, gridPos.y);
+    this.removeBomb(bomb.id);
+    bomb.removeObserver(this, events.BOMB.EXPLODE);
+  },
   createExplosion: function(x, y) {
-    var explosions = []
+    var explosions = [];
+    var overlappingBombs = [];
     for (var gy = y - 1; gy <= y + 1; gy++) {
       for (var gx = x - 1; gx <= x + 1; gx++) {
         explosions.push({ x: gx * this.CELL_SIZE, y: gy * this.CELL_SIZE });
@@ -162,9 +169,25 @@ const world = {
         } else {
           this.damageTile(gx, gy, 1);
         }
+
+        overlappingBombs = overlappingBombs.concat(this.bombs.filter(function(bomb) {
+          if (bomb.active) {
+            var bombGridPos = this.coordsToGridPos(bomb.pos);
+            if (bombGridPos.x === gx && bombGridPos.y === gy) {
+              bomb.active = false;
+              return true;
+            }
+          }
+          return false;
+        }, this));
       }
     }
+
     this.server.emit('create_explosions', explosions);
+
+    overlappingBombs.forEach(function(bomb) {
+      bomb.explode();
+    });
   },
   tick: function() {
     this.bombs.forEach(function(bomb) {
@@ -217,10 +240,7 @@ const world = {
   notify: function(entity, event) {
     switch(event) {
       case events.BOMB.EXPLODE:
-        var gridPos = this.coordsToGridPos(entity.pos);
-        this.createExplosion(gridPos.x, gridPos.y);
-        this.removeBomb(entity.id);
-        entity.removeObserver(this, events.BOMB.EXPLODE);
+        this.detonateBomb(entity);
       break;
       case events.TILE.UPGRADE:
         this.server.emit('set_tile', entity.pos, entity.type);

@@ -16,13 +16,17 @@ function Bomb(player, id, x, y, world) {
 Bomb.prototype = Object.create(Subject.prototype);
 Bomb.prototype.constructor = Bomb;
 
+Bomb.prototype.explode = function() {
+  this.active = false;
+  this.notify(this, events.BOMB.EXPLODE);
+};
+
 Bomb.prototype.update = function() {
   if (this.active) {
     this.fuse -= this.world.getElapsed();
 
     if (this.fuse <= 0) {
-      this.active = false;
-      this.notify(this, events.BOMB.EXPLODE);
+      this.explode();
     }
   }
 };
