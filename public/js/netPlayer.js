@@ -20,6 +20,8 @@ NetPlayer.prototype.updateInput = function(input, pos) {
   if (input.keys) {
     this.input = input;
   }
-  this.x = pos.x;
-  this.y = pos.y;
+
+  if (this.x !== pos.x || this.y != pos.y) {
+    game.add.tween(this).to(pos, 250);
+  }
 };
