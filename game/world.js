@@ -40,11 +40,35 @@ const world = {
     }, this);
   },
   getRandomPos: function() {
-    var pos = {};
-    pos.x = this.CELL_SIZE + Math.floor(Math.random() * (this.WIDTH - this.CELL_SIZE * 2));
-    pos.y = this.CELL_SIZE + Math.floor(Math.random() * (this.HEIGHT - this.CELL_SIZE * 2));
+    var mapHeight = this.map.length;
+    var mapWidth = this.map[0].length;
+    const MAX_ATTEMPTS = 20;
+    var attempts = 0;
+    var x, y, pos;
+    while (attempts < MAX_ATTEMPTS) {
+      x = 1 + Math.floor(Math.random() * (mapWidth - 1));
+      y = 1 + Math.floor(Math.random() * (mapHeight - 1));
 
-    return pos;
+      var tileType = this.getTile(x, y).type;
+      if (tileType === 2 || tileType === 3 || tileType === 4) {
+        return {
+          x: x * this.CELL_SIZE + this.CELL_SIZE / 2,
+          y: y * this.CELL_SIZE + this.CELL_SIZE / 2
+        };
+      }
+      attempts++;
+    }
+
+    var pos = {
+      x: x,
+      y: y
+    }
+    this.setTileType(x, y, 4);
+
+    return {
+      x: x * this.CELL_SIZE + this.CELL_SIZE / 2,
+      y: y * this.CELL_SIZE + this.CELL_SIZE / 2
+    };
   },
   addClient: function(client) {
     this.clients.push(client);
@@ -94,6 +118,10 @@ const world = {
   },
   getTile: function(x, y) {
     return this.map[y][x];
+  },
+  setTileType: function(x, y, type) {
+    this.map[y][x].type = type;
+    this.server.emit('set_tile', { x: x, y: y }, type);
   },
   upgradeTile: function(x, y) {
     return this.getTile(x, y).upgrade();
