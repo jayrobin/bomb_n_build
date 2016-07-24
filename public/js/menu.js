@@ -1,6 +1,6 @@
 var menuState = {
   create: function() {
-    var nameLabel = game.add.text(game.world.centerX, 50, 'Multi Game', { font: '50px Arial', fill: '#ffffff' });
+    var nameLabel = game.add.text(game.world.centerX, 50, 'Bomb n Build', { font: '50px Arial', fill: '#ffffff' });
     nameLabel.anchor.setTo(0.5, 0.5);
 
     var infoLabel = game.add.text(game.world.centerX, game.world.height / 2, "SPACE to drop bombs\nSHIFT to build", { font: '20px Arial', fill: '#ffffff', align: 'center' });
