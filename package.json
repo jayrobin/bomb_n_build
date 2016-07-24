@@ -2,6 +2,9 @@
   "name": "multi-game",
   "version": "0.0.1",
   "description": "Multi-player game in Socket.io and Phaser",
+  "engines": {
+    "node": "4.4.5"
+  },
   "dependencies": {
     "express": "^4.13.4",
     "randomstring": "^1.1.5",
