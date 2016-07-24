@@ -67,7 +67,7 @@ const world = {
   },
   getBombPositions: function() {
     return this.bombs.map(function(bomb) {
-      return { id: bomb.id, pos: bomb.pos };
+      return { id: bomb.id, pos: bomb.pos, fuse: bomb.fuse };
     });
   },
   addBomb: function(player, x, y) {

@@ -47,13 +47,13 @@ var playState = {
       player.remove();
     }
   },
-  addBomb: function(id, x, y) {
+  addBomb: function(id, x, y, fuse) {
     var bomb = this.bombs.getFirstDead();
 
     if (!bomb) {
-      this.bombs.add(new Bomb(id, x, y));
+      this.bombs.add(new Bomb(id, x, y, fuse));
     } else {
-      bomb.init(id, x, y);
+      bomb.init(id, x, y, fuse);
     }
   },
   removeBomb: function(id) {

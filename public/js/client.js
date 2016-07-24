@@ -49,12 +49,12 @@ var Client = {
       player.updateInput(input);
     }
   },
-  handleDropBomb: function(id, pos) {
-    this.game.addBomb(id, pos.x, pos.y);
+  handleDropBomb: function(id, pos, fuse) {
+    this.game.addBomb(id, pos.x, pos.y, fuse);
   },
   handleCurrentBombs: function(bombs) {
     bombs.forEach(function(bomb) {
-      this.handleDropBomb(bomb.id, bomb.pos);
+      this.handleDropBomb(bomb.id, bomb.pos, bomb.fuse);
     }, this);
   },
   handleRemoveBomb: function(id) {
