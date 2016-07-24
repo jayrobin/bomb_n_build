@@ -1,7 +1,7 @@
 var bootState = {
   preload: function() {
-    game.load.spritesheet('player', 'assets/img/player.png', 32, 32, 12);
-    game.load.spritesheet('enemy', 'assets/img/enemy.png', 32, 32, 12);
+    game.load.spritesheet('player', 'assets/img/tintPlayer.png', 32, 32, 12);
+    game.load.spritesheet('enemy', 'assets/img/tintPlayer.png', 32, 32, 12);
     game.load.spritesheet('explosion', 'assets/img/explosion.png', 32, 32, 8);
     game.load.spritesheet('buildIndicator', 'assets/img/buildIndicator.png', 32, 32, 8);
     game.load.spritesheet('bomb', 'assets/img/bomb.png', 32, 32, 14);

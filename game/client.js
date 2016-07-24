@@ -16,8 +16,8 @@ Client.prototype.initialize = function() {
   this.setupListeners();
   this.socket.emit('register_id', this.id);
   this.socket.emit('map_state', world.getMapData());
-  this.setInitialPos(world.getRandomPos());
-  this.socket.emit('current_players', world.getClientPositions());
+  this.setInitialPos(world.getRandomPos(), this.getColor());
+  this.socket.emit('current_players', world.getClients());
   this.socket.emit('current_bombs', world.getBombPositions());
   this.socket.emit('current_building_tiles', world.getBuilders());
   this.active = true;
@@ -79,8 +79,8 @@ Client.prototype.handleDisconnection = function() {
 
 Client.prototype.setInitialPos = function(pos) {
   this.pos = pos;
-  this.socket.emit('set_initial_pos', this.pos);
-  this.socket.broadcast.emit('add_player', this.id, this.pos);
+  this.socket.emit('set_initial_pos', this.pos, this.color);
+  this.socket.broadcast.emit('add_player', this.id, this.pos, this.color);
 };
 
 Client.prototype.handleUpdateInput = function(input, pos) {
@@ -97,6 +97,10 @@ Client.prototype.handleDropBomb = function(pos) {
       this.bombs.push(bomb);
     }
   }
+};
+
+Client.prototype.getColor = function() {
+  return this.color || (this.color = Math.random() * 0xffffff);
 };
 
 Client.prototype.removeBomb = function(id) {

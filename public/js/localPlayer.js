@@ -1,5 +1,6 @@
-function LocalPlayer(id, x, y) {
+function LocalPlayer(id, x, y, color) {
   Phaser.Sprite.call(this, game, x, y, 'player');
+  this.tint = color;
   this.initialize();
   this.id = id;
   this.cursor = game.input.keyboard.createCursorKeys();

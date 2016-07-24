@@ -26,13 +26,13 @@ var playState = {
       this.game.physics.arcade.overlap(this.players, this.explosions, this.handlePlayerExplosionOverlap, null, this);
     }
   },
-  createPlayer: function(id, x, y) {
-    this.player = new LocalPlayer(id, x, y);
+  createPlayer: function(id, x, y, color) {
+    this.player = new LocalPlayer(id, x, y, color);
     this.players.add(this.player);
     game.camera.follow(this.player);
   },
-  createNetPlayer: function(id, x, y) {
-    var player = new NetPlayer(id, x, y);
+  createNetPlayer: function(id, x, y, color) {
+    var player = new NetPlayer(id, x, y, color);
     this.players.add(player);
   },
   findPlayerById(id) {
