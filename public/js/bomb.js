@@ -1,5 +1,7 @@
 function Bomb(id, x, y, fuse) {
   Phaser.Sprite.call(this, game, x, y, 'bomb');
+  game.physics.arcade.enable(this);
+  this.body.immovable = true;
   this.setupAnimations();
   this.init(id, x, y, fuse);
 };

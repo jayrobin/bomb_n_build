@@ -22,6 +22,7 @@ var playState = {
       });
 
       this.game.physics.arcade.collide(this.players, this.world.tiles);
+      this.game.physics.arcade.collide(this.players, this.bombs);
       this.game.physics.arcade.overlap(this.players, this.explosions, this.handlePlayerExplosionOverlap, null, this);
     }
   },
