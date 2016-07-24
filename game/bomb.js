@@ -18,6 +18,7 @@ Bomb.prototype.constructor = Bomb;
 
 Bomb.prototype.explode = function() {
   this.active = false;
+  this.player.removeBomb(this.id);
   this.notify(this, events.BOMB.EXPLODE);
 };
 

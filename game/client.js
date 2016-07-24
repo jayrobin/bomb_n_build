@@ -1,12 +1,14 @@
 const world = require('./world');
 
 const BOMB_DROP_DELAY = 1000;
+const MAX_BOMBS = 2;
 
 function Client(id, socket, io) {
   this.id = id;
   this.socket = socket;
   this.io = io;
   this.active = false;
+  this.bombs = [];
   console.log(`Client connected: ${this.id}`);
   this.initialize();
 }
@@ -89,14 +91,21 @@ Client.prototype.handleUpdateInput = function(input, pos) {
 };
 
 Client.prototype.handleDropBomb = function(pos) {
-  if (this.bombDropTimer === 0) {
+  if (this.bombs.length < MAX_BOMBS) {
     var bomb = world.addBomb(this, pos.x, pos.y);
     if (bomb) {
       console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
       this.io.emit('drop_bomb', bomb.id, bomb.pos, bomb.fuse);
       this.bombDropTimer = BOMB_DROP_DELAY;
+      this.bombs.push(bomb);
     }
   }
+};
+
+Client.prototype.removeBomb = function(id) {
+  this.bombs = this.bombs.filter(function(bomb) {
+    return bomb.id !== id;
+  });
 };
 
 Client.prototype.update = function() {
