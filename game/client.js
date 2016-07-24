@@ -1,6 +1,5 @@
 const world = require('./world');
 
-const BOMB_DROP_DELAY = 1000;
 const MAX_BOMBS = 2;
 
 function Client(id, socket, io) {
@@ -21,7 +20,6 @@ Client.prototype.initialize = function() {
   this.socket.emit('current_players', world.getClientPositions());
   this.socket.emit('current_bombs', world.getBombPositions());
   this.socket.emit('current_building_tiles', world.getBuilders());
-  this.bombDropTimer = 0;
   this.active = true;
 };
 
@@ -96,7 +94,6 @@ Client.prototype.handleDropBomb = function(pos) {
     if (bomb) {
       console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
       this.io.emit('drop_bomb', bomb.id, bomb.pos, bomb.fuse);
-      this.bombDropTimer = BOMB_DROP_DELAY;
       this.bombs.push(bomb);
     }
   }
@@ -110,16 +107,9 @@ Client.prototype.removeBomb = function(id) {
 
 Client.prototype.update = function() {
   if (this.active) {
-    this.tickBombDropTimer();
     if (!!this.buildingTile) {
       this.buildingTile.update();
     }
-  }
-};
-
-Client.prototype.tickBombDropTimer = function() {
-  if (this.bombDropTimer > 0) {
-    this.bombDropTimer = Math.max(this.bombDropTimer - world.getElapsed(), 0);
   }
 };
 
