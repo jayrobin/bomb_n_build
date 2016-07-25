@@ -16,7 +16,6 @@ Client.prototype.initialize = function() {
   this.setupListeners();
   this.socket.emit('register_id', this.id);
   this.socket.emit('map_state', world.getMapData());
-  this.setInitialPos(world.getRandomPos(), this.getColor());
   this.socket.emit('current_players', world.getClients());
   this.socket.emit('current_bombs', world.getBombPositions());
   this.socket.emit('current_building_tiles', world.getBuilders());
@@ -24,12 +23,18 @@ Client.prototype.initialize = function() {
 };
 
 Client.prototype.setupListeners = function() {
+  this.socket.on('set_name', this.handleSetName.bind(this));
   this.socket.on('disconnect', this.handleDisconnection.bind(this));
   this.socket.on('update_input', this.handleUpdateInput.bind(this));
   this.socket.on('drop_bomb', this.handleDropBomb.bind(this));
   this.socket.on('respawn', this.handleRespawn.bind(this));
   this.socket.on('start_building', this.handleStartBuilding.bind(this));
   this.socket.on('stop_building', this.handleStopBuilding.bind(this));
+};
+
+Client.prototype.handleSetName = function(playerName) {
+  this.setName(playerName);
+  this.setInitialPos(world.getRandomPos(), this.getColor());
 };
 
 Client.prototype.handleRespawn = function() {
@@ -79,8 +84,8 @@ Client.prototype.handleDisconnection = function() {
 
 Client.prototype.setInitialPos = function(pos) {
   this.pos = pos;
-  this.socket.emit('set_initial_pos', this.pos, this.color);
-  this.socket.broadcast.emit('add_player', this.id, this.pos, this.color);
+  this.socket.emit('set_initial_pos', this.pos, this.playerName, this.color);
+  this.socket.broadcast.emit('add_player', this.id, this.playerName, this.pos, this.color);
 };
 
 Client.prototype.handleUpdateInput = function(input, pos) {
@@ -96,6 +101,14 @@ Client.prototype.handleDropBomb = function(pos) {
       this.io.emit('drop_bomb', bomb.id, bomb.pos, bomb.fuse);
       this.bombs.push(bomb);
     }
+  }
+};
+
+Client.prototype.setName = function(playerName) {
+  if (playerName.length > 2 && playerName.length < 15) {
+    this.playerName = playerName;
+  } else {
+    this.playerName = Math.floor("Guest" + Math.random() * 999);
   }
 };
 

@@ -21,22 +21,23 @@ var Client = {
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
     this.id = id;
+    this.socket.emit('set_name', playerName);
   },
-  handleSetInitialPos: function(pos, color) {
+  handleSetInitialPos: function(pos, playerName, color) {
     console.log("Setting initial pos: " + pos.x + ", " + pos.y);
-    this.game.createPlayer(this.id, pos.x, pos.y, color);
+    this.game.createPlayer(this.id, playerName, pos.x, pos.y, color);
     this.game.start();
   },
   handleMapState: function(map) {
     this.game.setMap(map);
   },
-  handleAddPlayer: function(id, pos, color) {
-    console.log("Adding net player " + id + " (" + pos.x + ", " + pos.y + ") - " + color);
-    this.game.createNetPlayer(id, pos.x, pos.y, color);
+  handleAddPlayer: function(id, playerName, pos, color) {
+    console.log("Adding net player " + playerName + " (" + pos.x + ", " + pos.y + ") - " + color);
+    this.game.createNetPlayer(id, playerName, pos.x, pos.y, color);
   },
   handleCurrentPlayers: function(players) {
     players.forEach(function(player) {
-      this.handleAddPlayer(player.id, player.pos, player.color);
+      this.handleAddPlayer(player.id, player.playerName, player.pos, player.color);
     }, this);
   },
   handleRemovePlayer: function(id) {

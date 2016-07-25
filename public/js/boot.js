@@ -6,6 +6,8 @@ var bootState = {
     game.load.spritesheet('buildIndicator', 'assets/img/buildIndicator.png', 32, 32, 8);
     game.load.spritesheet('bomb', 'assets/img/bomb.png', 32, 32, 14);
     game.load.image('tiles', 'assets/img/tiles.png');
+
+    game.add.plugin(Fabrique.Plugins.InputField);
   },
   create: function() {
     game.stage.backgroundColor = '#3498db';

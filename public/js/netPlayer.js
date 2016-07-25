@@ -1,8 +1,9 @@
-function NetPlayer(id, x, y, color) {
+function NetPlayer(id, playerName, x, y, color) {
   Phaser.Sprite.call(this, game, x, y, 'enemy');
   this.tint = color;
   this.initialize();
   this.id = id;
+  this.playerName = playerName;
 }
 
 NetPlayer.prototype = Object.create(Player.prototype);

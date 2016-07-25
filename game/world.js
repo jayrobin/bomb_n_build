@@ -86,7 +86,7 @@ const world = {
   },
   getClients: function() {
     return this.clients.map(function(client) {
-      return { id: client.id, pos: client.pos, color: client.color };
+      return { id: client.id, playerName: client.playerName, pos: client.pos, color: client.color };
     });
   },
   getBombPositions: function() {
