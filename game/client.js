@@ -3,6 +3,7 @@
 const world = require('./world');
 
 const MAX_BOMBS = 2;
+const SPEED = 100;
 
 function Client(id, socket, io) {
   this.id = id;
@@ -10,6 +11,7 @@ function Client(id, socket, io) {
   this.io = io;
   this.active = false;
   this.bombs = [];
+  this.velocity = { x: 0, y: 0 };
   console.log(`Client connected: ${this.id}`);
   this.initialize();
 }
@@ -92,6 +94,24 @@ Client.prototype.setInitialPos = function(pos) {
 
 Client.prototype.handleUpdateInput = function(input, pos) {
   this.pos = pos;
+  this.input = input;
+
+  if (this.input.keys.up) {
+    this.velocity.y = -SPEED;
+  } else if (this.input.keys.down) {
+    this.velocity.y = SPEED;
+  } else {
+    this.velocity.y = 0;
+  }
+
+  if (this.input.keys.left) {
+    this.velocity.x = -SPEED;
+  } else if (this.input.keys.right) {
+    this.velocity.x = SPEED;
+  } else {
+    this.velocity.x = 0;
+  }
+
   this.socket.broadcast.emit('update_input', this.id, input, pos);
 };
 
@@ -129,6 +149,15 @@ Client.prototype.update = function() {
     if (!!this.buildingTile) {
       this.buildingTile.update();
     }
+    this.updatePos();
+  }
+};
+
+Client.prototype.updatePos = function() {
+  if (this.pos) {
+    const elapsedInMs = world.getElapsed() / 1000;
+    this.pos.x += this.velocity.x * elapsedInMs;
+    this.pos.y += this.velocity.y * elapsedInMs;
   }
 };
 
