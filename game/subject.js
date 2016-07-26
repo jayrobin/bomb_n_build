@@ -1,3 +1,5 @@
+'use strict';
+
 function Subject() {
   this.events = {};
 }
@@ -8,7 +10,7 @@ Subject.prototype.addObserver = function(observer, event) {
 
 Subject.prototype.removeObserver = function(observer, event) {
   if (this.events[event]) {
-    this.events[event] = this.events[event].filter(function(o) {
+    this.events[event] = this.events[event].filter((o) => {
       if (o !== observer) {
         return o;
       }
@@ -18,7 +20,7 @@ Subject.prototype.removeObserver = function(observer, event) {
 
 Subject.prototype.notify = function(entity, event) {
   if (this.events[event]) {
-    this.events[event].forEach(function(o) {
+    this.events[event].forEach((o) => {
       o.notify(entity, event);
     }, this);
   }

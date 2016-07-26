@@ -13,13 +13,13 @@ const TICK_DELAY = 100;
 
 app.use(express.static('public'));
 
-app.get('/', function(req, res) {
+app.get('/', (req, res) => {
   res.sendFile('index.html');
 });
 
 io.on('connection', handleConnection);
 
-http.listen(PORT, function() {
+http.listen(PORT, () => {
   console.log(`Server initialized on port: ${PORT}`);
 });
 

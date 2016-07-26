@@ -1,3 +1,5 @@
+'use strict';
+
 const events = {
   BOMB: {
     EXPLODE: 'bomb.explode'

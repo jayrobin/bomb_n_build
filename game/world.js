@@ -1,3 +1,5 @@
+'use strict';
+
 const rnd = require ('randomstring');
 const events = require('./events');
 const Bomb = require('./bomb');
@@ -31,25 +33,25 @@ const world = {
     this.server = server;
   },
   buildMap: function() {
-    this.map = this.map.map(function(row, y) {
-      return row.map(function(cell, x) {
-        var tile = new Tile({ x: x, y: y }, cell, world);
+    this.map = this.map.map((row, y) => {
+      return row.map((cell, x) => {
+        let tile = new Tile({ x: x, y: y }, cell, world);
         tile.addObserver(this, events.TILE.UPGRADE);
         return tile;
       }, this);
     }, this);
   },
   getRandomPos: function() {
-    var mapHeight = this.map.length;
-    var mapWidth = this.map[0].length;
+    const mapHeight = this.map.length;
+    const mapWidth = this.map[0].length;
     const MAX_ATTEMPTS = 20;
-    var attempts = 0;
-    var x, y, pos;
+    let attempts = 0;
+    let x, y, pos;
     while (attempts < MAX_ATTEMPTS) {
       x = 1 + Math.floor(Math.random() * (mapWidth - 1));
       y = 1 + Math.floor(Math.random() * (mapHeight - 1));
 
-      var tileType = this.getTile(x, y).type;
+      let tileType = this.getTile(x, y).type;
       if (tileType === 2 || tileType === 3 || tileType === 4) {
         return {
           x: x * this.CELL_SIZE + this.CELL_SIZE / 2,
@@ -59,7 +61,7 @@ const world = {
       attempts++;
     }
 
-    var pos = {
+    pos = {
       x: x,
       y: y
     }
@@ -74,8 +76,8 @@ const world = {
     this.clients.push(client);
   },
   removeClient: function(id) {
-    for (var i = 0; i < this.clients.length; i++) {
-      var client = this.clients[i];
+    for (let i = 0; i < this.clients.length; i++) {
+      let client = this.clients[i];
       if (client.id === id) {
         this.clients.splice(i, 1);
         return true;
@@ -85,28 +87,28 @@ const world = {
     return false;
   },
   getClients: function() {
-    return this.clients.map(function(client) {
+    return this.clients.map((client) => {
       return { id: client.id, playerName: client.playerName, pos: client.pos, color: client.color };
     });
   },
   getBombPositions: function() {
-    return this.bombs.map(function(bomb) {
+    return this.bombs.map((bomb) => {
       return { id: bomb.id, pos: bomb.pos, fuse: bomb.fuse };
     });
   },
   addBomb: function(player, x, y) {
-    var pos = this.clipPosToGrid({x, y});
+    const pos = this.clipPosToGrid({x, y});
 
     if (this.isValidBombPosition(pos)) {
-      var bomb = new Bomb(player, rnd.generate(8), pos.x, pos.y, this);
+      const bomb = new Bomb(player, rnd.generate(8), pos.x, pos.y, this);
       bomb.addObserver(this, events.BOMB.EXPLODE);
       this.bombs.push(bomb);
       return bomb;
     }
   },
   removeBomb: function(id) {
-    for (var i = 0; i < this.bombs.length; i++) {
-      var bomb = this.bombs[i];
+    for (let i = 0; i < this.bombs.length; i++) {
+      let bomb = this.bombs[i];
       if (bomb.id === id) {
         this.server.emit('remove_bomb', id);
         this.bombs.splice(i, 1);
@@ -127,42 +129,42 @@ const world = {
     return this.getTile(x, y).upgrade();
   },
   startBuilding: function(x, y) {
-    var tile = this.getTile(x, y);
+    const tile = this.getTile(x, y);
     tile.startBuilding();
     this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
   },
   stopBuilding: function(x, y) {
-    var tile = this.getTile(x, y);
+    const tile = this.getTile(x, y);
     tile.stopBuilding();
     this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
   },
   getBuilders: function() {
-    return this.clients.filter(function(client) {
+    return this.clients.filter((client) => {
       return !!client.buildingTile;
-    }).map(function(builder) {
-      var tile = builder.buildingTile;
+    }).map((builder) => {
+      const tile = builder.buildingTile;
       return { pos: tile.pos, buildInfo: tile.getBuildInfo() };
     });
   },
   damageTile: function(x, y, amount) {
     amount = amount || 1;
 
-    var tileType = this.getTile(x, y).damage(amount);
+    const tileType = this.getTile(x, y).damage(amount);
     if (tileType >= 0) {
       this.server.emit('set_tile', { x: x, y: y }, tileType);
     }
   },
   detonateBomb: function(bomb) {
-    var gridPos = this.coordsToGridPos(bomb.pos);
+    const gridPos = this.coordsToGridPos(bomb.pos);
     this.createExplosion(gridPos.x, gridPos.y);
     this.removeBomb(bomb.id);
     bomb.removeObserver(this, events.BOMB.EXPLODE);
   },
   createExplosion: function(x, y) {
-    var explosions = [];
-    var overlappingBombs = [];
-    for (var gy = y - 1; gy <= y + 1; gy++) {
-      for (var gx = x - 1; gx <= x + 1; gx++) {
+    const explosions = [];
+    let overlappingBombs = [];
+    for (let gy = y - 1; gy <= y + 1; gy++) {
+      for (let gx = x - 1; gx <= x + 1; gx++) {
         explosions.push({ x: gx * this.CELL_SIZE, y: gy * this.CELL_SIZE });
         if (gx === x && gy === y) {
           this.damageTile(gx, gy, 2);
@@ -170,9 +172,9 @@ const world = {
           this.damageTile(gx, gy, 1);
         }
 
-        overlappingBombs = overlappingBombs.concat(this.bombs.filter(function(bomb) {
+        overlappingBombs = overlappingBombs.concat(this.bombs.filter((bomb) => {
           if (bomb.active) {
-            var bombGridPos = this.coordsToGridPos(bomb.pos);
+            let bombGridPos = this.coordsToGridPos(bomb.pos);
             if (bombGridPos.x === gx && bombGridPos.y === gy) {
               bomb.active = false;
               return true;
@@ -190,10 +192,10 @@ const world = {
     });
   },
   tick: function() {
-    this.bombs.forEach(function(bomb) {
+    this.bombs.forEach((bomb) => {
       bomb.update();
     });
-    this.clients.forEach(function(client) {
+    this.clients.forEach((client) => {
       client.update();
     });
     this.lastTick = this.getTime();
@@ -205,7 +207,7 @@ const world = {
     return this.getTime() - this.lastTick;
   },
   clipPosToGrid: function(pos) {
-    var clippedPos = {
+    const clippedPos = {
       x: Math.floor(pos.x / this.CELL_SIZE) * this.CELL_SIZE,
       y: Math.floor(pos.y / this.CELL_SIZE) * this.CELL_SIZE
     };
@@ -213,7 +215,7 @@ const world = {
     return clippedPos;
   },
   coordsToGridPos: function(coords) {
-    var gridPos = {
+    const gridPos = {
       x: Math.floor(coords.x / this.CELL_SIZE),
       y: Math.floor(coords.y / this.CELL_SIZE),
     };
@@ -221,8 +223,8 @@ const world = {
     return gridPos;
   },
   isValidBombPosition: function(pos) {
-    for (var i = 0; i < this.bombs.length; i++) {
-      var bomb = this.bombs[i];
+    for (let i = 0; i < this.bombs.length; i++) {
+      let bomb = this.bombs[i];
       if (bomb.pos.x === pos.x && bomb.pos.y === pos.y) {
         return false;
       }
@@ -231,8 +233,8 @@ const world = {
     return true;
   },
   getMapData: function() {
-    return this.map.map(function(row) {
-      return row.map(function(tile) {
+    return this.map.map((row) => {
+      return row.map((tile) => {
         return tile.type;
       });
     });

@@ -1,3 +1,5 @@
+'use strict';
+
 const world = require('./world');
 
 const MAX_BOMBS = 2;
@@ -38,18 +40,18 @@ Client.prototype.handleSetName = function(playerName) {
 };
 
 Client.prototype.handleRespawn = function() {
-  var pos = world.getRandomPos();
+  const pos = world.getRandomPos();
   this.pos = pos;
   this.io.emit('player_respawn', this.id, this.pos);
 };
 
 Client.prototype.handleStartBuilding = function(pos, direction) {
-  var gridPos = world.coordsToGridPos(pos);
+  let gridPos = world.coordsToGridPos(pos);
   gridPos.x += direction.x;
   gridPos.y += direction.y;
 
   if (this.buildingTile) {
-    var gridPos = this.buildingTile.pos;
+    gridPos = this.buildingTile.pos;
     world.stopBuilding(gridPos.x, gridPos.y);
   }
 
@@ -59,12 +61,12 @@ Client.prototype.handleStartBuilding = function(pos, direction) {
 
 Client.prototype.handleStopBuilding = function(pos, direction) {
   if (!this.buildingTile) {
-    var gridPos = world.coordsToGridPos(pos);
+    const gridPos = world.coordsToGridPos(pos);
     gridPos.x += direction.x;
     gridPos.y += direction.y;
     world.stopBuilding(gridPos.x, gridPos.y);
   } else {
-    var gridPos = this.buildingTile.pos;
+    const gridPos = this.buildingTile.pos;
     world.stopBuilding(gridPos.x, gridPos.y);
     this.buildingTile = null;
   }
@@ -76,7 +78,7 @@ Client.prototype.handleDisconnection = function() {
   this.socket.broadcast.emit('remove_player', this.id);
 
   if (this.buildingTile) {
-    var gridPos = this.buildingTile.pos;
+    const gridPos = this.buildingTile.pos;
     world.stopBuilding(gridPos.x, gridPos.y);
     this.buildingTile = null;
   }
@@ -95,7 +97,7 @@ Client.prototype.handleUpdateInput = function(input, pos) {
 
 Client.prototype.handleDropBomb = function(pos) {
   if (this.bombs.length < MAX_BOMBS) {
-    var bomb = world.addBomb(this, pos.x, pos.y);
+    const bomb = world.addBomb(this, pos.x, pos.y);
     if (bomb) {
       console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
       this.io.emit('drop_bomb', bomb.id, bomb.pos, bomb.fuse);
