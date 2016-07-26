@@ -41,7 +41,7 @@ Tile.prototype.getBuildInfo = function() {
 
 Tile.prototype.damage = function(amount) {
   if (this.type !== Tile.TYPE.FIXED && this.type !== Tile.TYPE.SAFE && this.type !== Tile.TYPE.HOLE) {
-    this.type = Math.max(1, this.type - amount);
+    this.type = Math.max(Tile.TYPE.HOLE, this.type - amount);
     return true;
   }
   return false;
