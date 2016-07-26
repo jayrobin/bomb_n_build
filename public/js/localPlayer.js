@@ -1,10 +1,11 @@
-function LocalPlayer(id, playerName, x, y, color) {
+function LocalPlayer(id, playerName, x, y, color, label) {
   Phaser.Sprite.call(this, game, x, y, 'player');
   this.tint = color;
-  this.initialize();
   this.id = id;
   this.playerName = playerName;
+  this.label = label;
   this.cursor = game.input.keyboard.createCursorKeys();
+  this.initialize();
   this.setupControls();
 }
 
@@ -24,6 +25,7 @@ LocalPlayer.prototype.update = function() {
   if (this.alive) {
     this.updateInput(this.building);
     this.updatePos();
+    this.updateLabel();
     this.updateAnim(this.input.keys.up ||
                     this.input.keys.down ||
                     this.input.keys.left ||

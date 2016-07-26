@@ -1,9 +1,10 @@
-function NetPlayer(id, playerName, x, y, color) {
+function NetPlayer(id, playerName, x, y, color, label) {
   Phaser.Sprite.call(this, game, x, y, 'enemy');
   this.tint = color;
-  this.initialize();
   this.id = id;
   this.playerName = playerName;
+  this.label = label;
+  this.initialize();
 }
 
 NetPlayer.prototype = Object.create(Player.prototype);
@@ -15,6 +16,7 @@ NetPlayer.prototype.remove = function() {
 
 NetPlayer.prototype.update = function() {
   this.updatePos();
+  this.updateLabel();
   this.updateAnim(this.body.velocity.x !== 0 || this.body.velocity.y !== 0);
 };
 

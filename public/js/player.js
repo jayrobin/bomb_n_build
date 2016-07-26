@@ -10,6 +10,7 @@ Player.prototype.initialize = function() {
   this.anchor.setTo(0.5, 0.5);
   game.physics.arcade.enable(this);
   this.body.setSize(24, 28, 4, 4);
+  this.label.text = this.playerName;
 };
 
 Player.prototype.resetInput = function() {
@@ -76,6 +77,11 @@ Player.prototype.updatePos = function() {
   } else if (this.y > game.world.height) {
     this.y = -this.height;
   }
+};
+
+Player.prototype.updateLabel = function() {
+  this.label.x = this.x;
+  this.label.y = this.y;
 };
 
 Player.prototype.getDirection = function() {

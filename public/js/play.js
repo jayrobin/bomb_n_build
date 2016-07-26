@@ -11,6 +11,7 @@ var playState = {
     this.players = game.add.group();
     this.explosions = game.add.group();
     this.buildIndicators = game.add.group();
+    this.playerLabels = game.add.group();
     this.setupUI();
   },
   update: function() {
@@ -27,12 +28,12 @@ var playState = {
     }
   },
   createPlayer: function(id, playerName, x, y, color) {
-    this.player = new LocalPlayer(id, playerName, x, y, color);
+    this.player = new LocalPlayer(id, playerName, x, y, color, this.createPlayerLabel());
     this.players.add(this.player);
     game.camera.follow(this.player);
   },
   createNetPlayer: function(id, playerName, x, y, color) {
-    var player = new NetPlayer(id, playerName, x, y, color);
+    var player = new NetPlayer(id, playerName, x, y, color, this.createPlayerLabel());
     this.players.add(player);
   },
   findPlayerById(id) {
@@ -45,8 +46,16 @@ var playState = {
   removeNetPlayer: function(id) {
     var player = this.findPlayerById(id);
     if (player) {
+      player.label.destroy();
       player.remove();
     }
+  },
+  createPlayerLabel: function() {
+    var playerLabel = game.add.text(0, 0, "", { font: "10px Arial", fill: "#ffffff", align: "center" });
+    playerLabel.anchor.setTo(0.5, 1.5);
+    this.playerLabels.add(playerLabel);
+
+    return playerLabel;
   },
   addBomb: function(id, x, y, fuse) {
     var bomb = this.bombs.getFirstDead();
