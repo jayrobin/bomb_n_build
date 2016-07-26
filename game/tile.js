@@ -73,6 +73,7 @@ Tile.prototype.upgrade = function() {
 
 Tile.prototype.isPassable = function() {
   switch(this.type) {
+    case Tile.TYPE.SAFE:
     case Tile.TYPE.FLOOR:
     case Tile.TYPE.DAMAGE_HIGH:
     case Tile.TYPE.DAMAGE_LOW:
@@ -80,7 +81,6 @@ Tile.prototype.isPassable = function() {
     break;
 
     case Tile.TYPE.FIXED:
-    case Tile.TYPE.SAFE:
     case Tile.TYPE.HOLE:
     case Tile.TYPE.WALL_1:
     case Tile.TYPE.WALL_2:
