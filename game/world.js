@@ -13,19 +13,19 @@ const world = {
   bombs: [],
   map: [
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
-    [0,4,4,4,4,4,4,4,4,4,4,4,4,4,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,1,1,1,5,5,5,5,5,0],
+    [0,5,5,5,5,5,1,1,1,5,5,5,5,5,0],
+    [0,5,5,5,5,5,1,1,1,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
+    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
     [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
   ],
   lastTick: new Date().getTime(),
@@ -33,43 +33,24 @@ const world = {
     this.server = server;
   },
   buildMap: function() {
+    this.spawnTiles = [];
     this.map = this.map.map((row, y) => {
       return row.map((cell, x) => {
         let tile = new Tile({ x: x, y: y }, cell, world);
+        if (cell === Tile.TYPE.SAFE) {
+          this.spawnTiles.push(tile);
+        }
         tile.addObserver(this, events.TILE.UPGRADE);
         return tile;
       }, this);
     }, this);
   },
   getRandomPos: function() {
-    const mapHeight = this.map.length;
-    const mapWidth = this.map[0].length;
-    const MAX_ATTEMPTS = 20;
-    let attempts = 0;
-    let x, y, pos;
-    while (attempts < MAX_ATTEMPTS) {
-      x = 1 + Math.floor(Math.random() * (mapWidth - 1));
-      y = 1 + Math.floor(Math.random() * (mapHeight - 1));
-
-      let tileType = this.getTile(x, y).type;
-      if (tileType === 2 || tileType === 3 || tileType === 4) {
-        return {
-          x: x * this.CELL_SIZE + this.CELL_SIZE / 2,
-          y: y * this.CELL_SIZE + this.CELL_SIZE / 2
-        };
-      }
-      attempts++;
-    }
-
-    pos = {
-      x: x,
-      y: y
-    }
-    this.setTileType(x, y, 4);
+    const randomSafeTile = this.spawnTiles[Math.floor(Math.random() * this.spawnTiles.length)];
 
     return {
-      x: x * this.CELL_SIZE + this.CELL_SIZE / 2,
-      y: y * this.CELL_SIZE + this.CELL_SIZE / 2
+      x: randomSafeTile.pos.x * this.CELL_SIZE + this.CELL_SIZE / 2,
+      y: randomSafeTile.pos.y * this.CELL_SIZE + this.CELL_SIZE / 2
     };
   },
   addClient: function(client) {
@@ -151,9 +132,9 @@ const world = {
   damageTile: function(x, y, amount) {
     amount = amount || 1;
 
-    const tileType = this.getTile(x, y).damage(amount);
-    if (tileType >= 0) {
-      this.server.emit('set_tile', { x: x, y: y }, tileType);
+    const tile = this.getTile(x, y);
+    if (tile.damage(amount)) {
+      this.server.emit('set_tile', { x: x, y: y }, tile.type);
     }
   },
   detonateBomb: function(bomb) {

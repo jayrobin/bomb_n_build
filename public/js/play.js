@@ -97,6 +97,7 @@ var playState = {
   },
   handlePlayerExplosionOverlap: function(player, _explosion) {
     if (player === this.player) {
+      this.player.stopBuilding();
       this.showDeathScreen();
     }
     player.die();

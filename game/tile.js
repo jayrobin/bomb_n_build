@@ -3,19 +3,7 @@
 const events = require('./events');
 const Subject = require('./subject');
 
-const BUILD_DELAYS = [0, 1500, 1500, 1500, 3000, 6000, 15000, 30000];
-
-const TYPE = {
-  FIXED: 0,
-  HOLE: 1,
-  DAMAGE_HIGH: 2,
-  DAMAGE_LOW: 3,
-  FLOOR: 4,
-  WALL_1: 5,
-  WALL_2: 6,
-  WALL_3: 7,
-  WALL_4: 8
-};
+const BUILD_DELAYS = [0, 0, 1500, 1500, 1500, 3000, 6000, 15000, 30000];
 
 function Tile(pos, type, world) {
   Subject.call(this);
@@ -29,6 +17,20 @@ function Tile(pos, type, world) {
 Tile.prototype = Object.create(Subject.prototype);
 Tile.prototype.constructor = Tile;
 
+Tile.TYPE = {
+  FIXED: 0,
+  SAFE: 1,
+  HOLE: 2,
+  DAMAGE_HIGH: 3,
+  DAMAGE_LOW: 4,
+  FLOOR: 5,
+  WALL_1: 6,
+  WALL_2: 7,
+  WALL_3: 8,
+  WALL_4: 9
+};
+
+
 Tile.prototype.getBuildInfo = function() {
   return {
     time: this.buildTimer,
@@ -38,26 +40,34 @@ Tile.prototype.getBuildInfo = function() {
 };
 
 Tile.prototype.damage = function(amount) {
-  if (this.type > 1) {
+  if (this.type !== Tile.TYPE.FIXED && this.type !== Tile.TYPE.SAFE && this.type !== Tile.TYPE.HOLE) {
     this.type = Math.max(1, this.type - amount);
-    return this.type;
+    return true;
   }
-  return -1;
+  return false;
 };
 
 Tile.prototype.isUpgradable = function() {
-  return this.type !== TYPE.FIXED && this.type !== TYPE.WALL_4;
+  return this.type !== Tile.TYPE.FIXED && this.type !== Tile.TYPE.SAFE && Tile.type !== Tile.TYPE.WALL_4;
 };
 
 Tile.prototype.upgrade = function() {
-  if (this.type > 0) {
-    if (this.type < 4) {
-      this.type = 4;
-    } else if (this.type < 8) {
+  switch(this.type) {
+    case Tile.TYPE.HOLE:
+    case Tile.TYPE.DAMAGE_HIGH:
+    case Tile.TYPE.DAMAGE_LOW:
+      this.type = Tile.TYPE.FLOOR;
+    break;
+
+    case Tile.TYPE.FLOOR:
+    case Tile.TYPE.WALL_1:
+    case Tile.TYPE.WALL_2:
+    case Tile.TYPE.WALL_3:
       this.type += 1;
-    }
+    break;
   }
   this.buildTimer = 0;
+
   return this.type;
 };
 

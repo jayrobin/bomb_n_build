@@ -18,7 +18,7 @@ LocalPlayer.prototype.setupControls = function() {
 
   var buildKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);
   buildKey.onDown.add(this.onBuildKeyDown, this);
-  buildKey.onUp.add(this.onBuildKeyUp, this);
+  buildKey.onUp.add(this.stopBuilding, this);
 };
 
 LocalPlayer.prototype.update = function() {
@@ -84,7 +84,7 @@ LocalPlayer.prototype.onBuildKeyDown = function() {
   }
 };
 
-LocalPlayer.prototype.onBuildKeyUp = function() {
+LocalPlayer.prototype.stopBuilding = function() {
   if (this.alive) {
     this.building = false;
     Client.stopBuilding(this.x, this.y, this.getDirection());
