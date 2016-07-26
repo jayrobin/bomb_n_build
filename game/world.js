@@ -202,6 +202,12 @@ const world = {
       }
     }
 
+    const gridPos = this.coordsToGridPos(pos);
+    const tile = this.getTile(gridPos.x, gridPos.y);
+    if (!tile.isPassable()) {
+      return false;
+    }
+
     return true;
   },
   getMapData: function() {
