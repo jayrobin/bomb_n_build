@@ -11,39 +11,28 @@ const world = {
   CELL_SIZE: 32,
   clients: [],
   bombs: [],
-  map: [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,1,1,1,5,5,5,5,5,0],
-    [0,5,5,5,5,5,1,1,1,5,5,5,5,5,0],
-    [0,5,5,5,5,5,1,1,1,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,5,5,5,5,5,5,5,5,5,5,5,5,5,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-  ],
   lastTick: new Date().getTime(),
   setServer: function(server) {
     this.server = server;
   },
-  buildMap: function() {
+  buildMap: function(mapData) {
     this.spawnTiles = [];
-    this.map = this.map.map((row, y) => {
-      return row.map((cell, x) => {
+    this.map = [];
+
+    const rows = mapData.split('\n');
+    rows.forEach((row, y) => {
+      let mapRow = [];
+      row.split('').forEach((cell, x) => {
+        cell = parseInt(cell, 10);
         let tile = new Tile({ x: x, y: y }, cell, world);
         if (cell === Tile.TYPE.SAFE) {
           this.spawnTiles.push(tile);
         }
         tile.addObserver(this, events.TILE.UPGRADE);
-        return tile;
-      }, this);
-    }, this);
+        mapRow.push(tile);
+      });
+      this.map.push(mapRow);
+    });
   },
   getRandomPos: function() {
     const randomSafeTile = this.spawnTiles[Math.floor(Math.random() * this.spawnTiles.length)];

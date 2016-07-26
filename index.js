@@ -2,28 +2,36 @@ const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
+var fs = require('fs');
 const world = require('./game/world');
-world.setServer(io);
-world.buildMap();
 const Client = require('./game/client');
 const clients = [];
 
 const PORT = process.env.PORT || 3001;
 const TICK_DELAY = 100;
+const MAP_FILE = './game/map.txt';
 
-app.use(express.static('public'));
-
-app.get('/', (req, res) => {
-  res.sendFile('index.html');
+fs.readFile(MAP_FILE, 'utf8', (err, mapData) => {
+  world.buildMap(mapData);
+  world.setServer(io);
+  start();
 });
 
-io.on('connection', handleConnection);
+function start() {
+  app.use(express.static('public'));
 
-http.listen(PORT, () => {
-  console.log(`Server initialized on port: ${PORT}`);
-});
+  app.get('/', (req, res) => {
+    res.sendFile('index.html');
+  });
 
-setInterval(world.tick.bind(world), TICK_DELAY);
+  io.on('connection', handleConnection);
+
+  http.listen(PORT, () => {
+    console.log(`Server initialized on port: ${PORT}`);
+  });
+
+  setInterval(world.tick.bind(world), TICK_DELAY);
+}
 
 function handleConnection(socket) {
   world.addClient(new Client(socket.id, socket, io));
