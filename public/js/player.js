@@ -25,6 +25,7 @@ Player.prototype.resetInput = function() {
 };
 
 Player.prototype.respawn = function(x, y) {
+  this.label.visible = true;
   this.reset(x, y);
 };
 
@@ -122,4 +123,9 @@ Player.prototype.getDirectionAsString = function() {
       return '';
       break;
   }
+};
+
+Player.prototype.die = function() {
+  this.label.visible = false;
+  this.kill();
 };

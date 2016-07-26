@@ -99,7 +99,7 @@ var playState = {
     if (player === this.player) {
       this.showDeathScreen();
     }
-    player.kill();
+    player.die();
   },
   setTile: function(x, y, tileState) {
     this.world.setTile(x, y, tileState);
