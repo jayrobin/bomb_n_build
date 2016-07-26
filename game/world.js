@@ -130,8 +130,10 @@ const world = {
   },
   startBuilding: function(x, y) {
     const tile = this.getTile(x, y);
-    tile.startBuilding();
-    this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
+    if (tile.isUpgradable()) {
+      tile.startBuilding();
+      this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
+    }
   },
   stopBuilding: function(x, y) {
     const tile = this.getTile(x, y);

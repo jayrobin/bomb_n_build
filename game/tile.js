@@ -5,6 +5,18 @@ const Subject = require('./subject');
 
 const BUILD_DELAYS = [0, 1500, 1500, 1500, 3000, 6000, 15000, 30000];
 
+const TYPE = {
+  FIXED: 0,
+  HOLE: 1,
+  DAMAGE_HIGH: 2,
+  DAMAGE_LOW: 3,
+  FLOOR: 4,
+  WALL_1: 5,
+  WALL_2: 6,
+  WALL_3: 7,
+  WALL_4: 8
+};
+
 function Tile(pos, type, world) {
   Subject.call(this);
   this.pos = pos;
@@ -31,6 +43,10 @@ Tile.prototype.damage = function(amount) {
     return this.type;
   }
   return -1;
+};
+
+Tile.prototype.isUpgradable = function() {
+  return this.type !== TYPE.FIXED && this.type !== TYPE.WALL_4;
 };
 
 Tile.prototype.upgrade = function() {
