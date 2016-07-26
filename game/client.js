@@ -110,7 +110,7 @@ Client.prototype.setName = function(playerName) {
   if (playerName.length > 2 && playerName.length < 15) {
     this.playerName = playerName;
   } else {
-    this.playerName = Math.floor("Guest" + Math.random() * 999);
+    this.playerName = "Guest" + Math.floor(Math.random() * 999);
   }
 };
 
