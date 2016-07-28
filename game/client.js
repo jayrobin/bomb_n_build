@@ -4,6 +4,13 @@ const world = require('./world');
 
 const MAX_BOMBS = 2;
 const SPEED = 100;
+const KEYS = ['up', 'down', 'left', 'right'];
+const KEY_AXIS = {
+  up: { descriptor: 'y', multiplier: -1 },
+  down: { descriptor: 'y', multiplier: 1 },
+  left: { descriptor: 'x', multiplier: -1 },
+  right: { descriptor: 'x', multiplier: 1 }
+};
 
 function Client(id, socket, io) {
   this.id = id;
@@ -13,6 +20,7 @@ function Client(id, socket, io) {
   this.bombs = [];
   this.velocity = { x: 0, y: 0 };
   this.pos = { x: 0, y: 0 };
+  this.input = { keys: {}, timestamps: {} };
   console.log(`Client connected: ${this.id}`);
   this.initialize();
 }
@@ -94,26 +102,35 @@ Client.prototype.setInitialPos = function(pos) {
 };
 
 Client.prototype.handleUpdateInput = function(input, pos) {
-  this.input = input;
+  const timestamps = this.getInputTimestamps(input);
+  Object.keys(input.keys).forEach((k) => {
+    let axis = KEY_AXIS[k];
+    if (!input.keys[k]) {
+      let elapsedInMs = (timestamps[k] - Math.max(this.input.timestamps[k] || 0, world.lastTick)) / 1000;
+      this.pos[axis.descriptor] += SPEED * elapsedInMs * axis.multiplier;
+      this.velocity[axis.descriptor] = 0;
+    } else {
+      this.velocity[axis.descriptor] = SPEED * axis.multiplier;
+    }
+  }, this);
 
-  if (this.input.keys.up) {
-    this.velocity.y = -SPEED;
-  } else if (this.input.keys.down) {
-    this.velocity.y = SPEED;
-  } else {
-    this.velocity.y = 0;
-  }
-
-  if (this.input.keys.left) {
-    this.velocity.x = -SPEED;
-  } else if (this.input.keys.right) {
-    this.velocity.x = SPEED;
-  } else {
-    this.velocity.x = 0;
-  }
-
-  this.socket.broadcast.emit('update_input', this.id, this.input, this.pos);
+  Object.assign(this.input.timestamps, timestamps);
+  Object.assign(this.input.keys, input.keys);
+  this.socket.broadcast.emit('update_input', this.id, input, this.pos);
 };
+
+Client.prototype.getInputTimestamps = function(input) {
+  const timestamps = {};
+  const time = world.getTime();
+  const keys = Object.keys(input.keys);
+  keys.forEach((k) => {
+    if (input.keys[k] !== this.input.keys[k]) {
+      timestamps[k] = time;
+    }
+  }, this);
+
+  return timestamps;
+}
 
 Client.prototype.handleDropBomb = function(pos) {
   if (this.bombs.length < MAX_BOMBS) {
@@ -154,9 +171,18 @@ Client.prototype.update = function() {
 };
 
 Client.prototype.updatePos = function() {
-  const elapsedInMs = world.getElapsed() / 1000;
-  this.pos.x += this.velocity.x * elapsedInMs;
-  this.pos.y += this.velocity.y * elapsedInMs;
+  KEYS.forEach((k) => {
+    if (this.input.keys[k]) {
+      let axis = KEY_AXIS[k];
+      let elapsedInMs;
+      if (this.input.timestamps[k] > world.lastTick) {
+        elapsedInMs = (world.getTime() - this.input.timestamps[k]) / 1000;
+      } else {
+        elapsedInMs = world.getElapsed() / 1000;
+      }
+      this.pos[axis.descriptor] += SPEED * elapsedInMs * axis.multiplier;
+    }
+  }, this);
 };
 
 module.exports = Client;

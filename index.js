@@ -8,7 +8,7 @@ const Client = require('./game/client');
 const clients = [];
 
 const PORT = process.env.PORT || 3001;
-const TICK_DELAY = 33;
+const TICK_DELAY = 100;
 const MAP_FILE = './game/map.txt';
 
 fs.readFile(MAP_FILE, 'utf8', (err, mapData) => {

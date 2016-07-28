@@ -22,10 +22,14 @@ NetPlayer.prototype.update = function() {
 
 NetPlayer.prototype.updateInput = function(input, pos) {
   if (input.keys) {
-    this.input = input;
+    Object.assign(this.input.keys, input.keys);
   }
 
-  if (this.x !== pos.x || this.y != pos.y) {
-    game.add.tween(this).to(pos, 250);
+  if (this.x !== pos.x && (input.keys.left || input.keys.right)) {
+    this.x = pos.x;
+  }
+
+  if (this.y !== pos.y && (input.keys.up || input.keys.down)) {
+    this.y = pos.y;
   }
 };
