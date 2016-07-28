@@ -4,6 +4,7 @@ const world = require('./world');
 
 const MAX_BOMBS = 2;
 const SPEED = 100;
+const TICKS_PER_REFRESH_STATE = 100;
 const KEYS = ['up', 'down', 'left', 'right'];
 const KEY_AXIS = {
   up: { descriptor: 'y', multiplier: -1 },
@@ -11,6 +12,7 @@ const KEY_AXIS = {
   left: { descriptor: 'x', multiplier: -1 },
   right: { descriptor: 'x', multiplier: 1 }
 };
+let ticks;
 
 function Client(id, socket, io) {
   this.id = id;
@@ -21,6 +23,7 @@ function Client(id, socket, io) {
   this.velocity = { x: 0, y: 0 };
   this.pos = { x: 0, y: 0 };
   this.input = { keys: {}, timestamps: {} };
+  ticks = 0;
   console.log(`Client connected: ${this.id}`);
   this.initialize();
 }
@@ -118,10 +121,6 @@ Client.prototype.handleUpdateInput = function(input, pos) {
   Object.assign(this.input.keys, input.keys);
 
   this.socket.broadcast.emit('update_input', this.id, input, this.pos);
-
-  if (pos.x !== this.pos.x || pos.y !== this.pos.y) {
-    this.socket.emit('set_pos', this.pos);
-  }
 };
 
 Client.prototype.getInputTimestamps = function(input) {
@@ -172,8 +171,17 @@ Client.prototype.update = function() {
       this.buildingTile.update();
     }
     this.updatePos();
+    ticks++;
+
+    if (this.shouldRefreshState()) {
+      this.socket.emit('set_pos', this.pos);
+    }
   }
 };
+
+Client.prototype.shouldRefreshState = function() {
+  return ticks % TICKS_PER_REFRESH_STATE === 0;
+}
 
 Client.prototype.updatePos = function() {
   KEYS.forEach((k) => {
