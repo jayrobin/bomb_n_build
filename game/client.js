@@ -12,6 +12,7 @@ function Client(id, socket, io) {
   this.active = false;
   this.bombs = [];
   this.velocity = { x: 0, y: 0 };
+  this.pos = { x: 0, y: 0 };
   console.log(`Client connected: ${this.id}`);
   this.initialize();
 }
@@ -93,7 +94,6 @@ Client.prototype.setInitialPos = function(pos) {
 };
 
 Client.prototype.handleUpdateInput = function(input, pos) {
-  this.pos = pos;
   this.input = input;
 
   if (this.input.keys.up) {
@@ -112,7 +112,7 @@ Client.prototype.handleUpdateInput = function(input, pos) {
     this.velocity.x = 0;
   }
 
-  this.socket.broadcast.emit('update_input', this.id, input, pos);
+  this.socket.broadcast.emit('update_input', this.id, this.input, this.pos);
 };
 
 Client.prototype.handleDropBomb = function(pos) {
@@ -154,11 +154,9 @@ Client.prototype.update = function() {
 };
 
 Client.prototype.updatePos = function() {
-  if (this.pos) {
-    const elapsedInMs = world.getElapsed() / 1000;
-    this.pos.x += this.velocity.x * elapsedInMs;
-    this.pos.y += this.velocity.y * elapsedInMs;
-  }
+  const elapsedInMs = world.getElapsed() / 1000;
+  this.pos.x += this.velocity.x * elapsedInMs;
+  this.pos.y += this.velocity.y * elapsedInMs;
 };
 
 module.exports = Client;

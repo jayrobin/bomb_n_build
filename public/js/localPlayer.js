@@ -46,24 +46,31 @@ LocalPlayer.prototype.updateInput = function(stop) {
   } else {
     if (this.input.keys.up !== this.cursor.up.isDown) {
       this.input.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
+      if (this.input.keys.down) {
+        this.input.keys.down = inputDelta.keys.down = false;
+      }
       update = true;
-    }
-    if (this.input.keys.down !== this.cursor.down.isDown) {
-      this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
-      update = true;
+    } else if (this.input.keys.down !== this.cursor.down.isDown) {
+      if (!this.input.keys.up) {
+        this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
+        update = true;
+      }
     }
     if (this.input.keys.left !== this.cursor.left.isDown) {
       this.input.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
+      if (this.input.keys.right) {
+        this.input.keys.right = inputDelta.keys.right = false;
+      }
       update = true;
-    }
-    if (this.input.keys.right !== this.cursor.right.isDown) {
-      this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
-      update = true;
+    } else if (this.input.keys.right !== this.cursor.right.isDown) {
+      if (!this.input.keys.left) {
+        this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
+        update = true;
+      }
     }
   }
-
   if (update) {
-    Client.updateInput(this.input, { x: this.x, y: this.y });
+    Client.updateInput(inputDelta, { x: this.x, y: this.y });
   }
 };
 
