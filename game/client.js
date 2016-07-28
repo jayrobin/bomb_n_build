@@ -116,7 +116,12 @@ Client.prototype.handleUpdateInput = function(input, pos) {
 
   Object.assign(this.input.timestamps, timestamps);
   Object.assign(this.input.keys, input.keys);
+
   this.socket.broadcast.emit('update_input', this.id, input, this.pos);
+
+  if (pos.x !== this.pos.x || pos.y !== this.pos.y) {
+    this.socket.emit('set_pos', this.pos);
+  }
 };
 
 Client.prototype.getInputTimestamps = function(input) {

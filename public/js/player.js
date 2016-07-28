@@ -129,3 +129,8 @@ Player.prototype.die = function() {
   this.label.visible = false;
   this.kill();
 };
+
+Player.prototype.setPos = function(x, y) {
+  this.x = x;
+  this.y = y;
+};
