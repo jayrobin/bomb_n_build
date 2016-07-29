@@ -36,7 +36,7 @@ var playState = {
     var player = new NetPlayer(id, playerName, x, y, color, this.createPlayerLabel());
     this.players.add(player);
   },
-  findPlayerById(id) {
+  findPlayerById: function(id) {
     return this.players.filter(function(player) {
       if (player.id === id) {
         return player;
