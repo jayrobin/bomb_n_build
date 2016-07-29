@@ -16,3 +16,7 @@ gulp.task('clean', () => {
 });
 
 gulp.task('js', ['clean', 'uglify']);
+
+gulp.task('watch', () => {
+  gulp.watch('client/*.js', ['uglify']);
+});
