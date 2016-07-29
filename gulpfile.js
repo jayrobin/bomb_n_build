@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const uglify = require('gulp-uglify');
 const util = require('gulp-util');
+const watch = require('gulp-watch');
 
 gulp.task('js', () => {
   gulp.src('client/*.js')
