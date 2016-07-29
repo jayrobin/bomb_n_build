@@ -10,12 +10,17 @@ gulp.task('uglify', () => {
       .pipe(gulp.dest('public/js'));
 });
 
+gulp.task('lib', () => {
+  gulp.src('lib/*.js')
+      .pipe(gulp.dest('public/js'));
+});
+
 gulp.task('clean', () => {
   return gulp.src('public/js', { read: false })
              .pipe(clean());
 });
 
-gulp.task('js', ['clean', 'uglify']);
+gulp.task('js', ['clean', 'uglify', 'lib']);
 
 gulp.task('watch', () => {
   gulp.watch('client/*.js', ['uglify']);
