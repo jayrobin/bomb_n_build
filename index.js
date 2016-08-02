@@ -3,13 +3,13 @@ const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const fs = require('fs');
-const world = require('./game/world');
-const Client = require('./game/client');
+const world = require('./server/world');
+const Client = require('./server/client');
 const clients = [];
 
 const PORT = process.env.PORT || 3001;
 const TICK_DELAY = 100;
-const MAP_FILE = './game/map.txt';
+const MAP_FILE = './server/map.txt';
 
 fs.readFile(MAP_FILE, 'utf8', (err, mapData) => {
   world.buildMap(mapData);

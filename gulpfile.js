@@ -28,6 +28,6 @@ gulp.task('js', ['clean', 'uglify', 'lib']);
 gulp.task('server', ['js'], () => {
   return nodemon({
     script: 'index.js',
-    watch: 'game/*.js'
+    watch: 'server/*.js'
   });
 });
