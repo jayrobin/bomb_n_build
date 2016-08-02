@@ -4,13 +4,13 @@ const util = require('gulp-util');
 const watch = require('gulp-watch');
 const clean = require('gulp-clean');
 
-gulp.task('uglify', () => {
+gulp.task('uglify', ['clean'], () => {
   gulp.src('client/*.js')
       .pipe(uglify().on('error', util.log))
       .pipe(gulp.dest('public/js'));
 });
 
-gulp.task('lib', () => {
+gulp.task('lib', ['clean'], () => {
   gulp.src('lib/*.js')
       .pipe(gulp.dest('public/js'));
 });
