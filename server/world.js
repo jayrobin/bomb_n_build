@@ -33,6 +33,8 @@ const world = {
       });
       this.map.push(mapRow);
     });
+    this.mapWidth = this.map.length;
+    this.mapHeight = this.map[0].length;
   },
   getRandomPos: function() {
     const randomSafeTile = this.spawnTiles[Math.floor(Math.random() * this.spawnTiles.length)];
@@ -89,7 +91,11 @@ const world = {
     return false;
   },
   getTile: function(x, y) {
-    return this.map[y][x];
+    if (x >= 0 && y >= 0 && x < this.mapWidth && y < this.mapHeight) {
+      return this.map[y][x];
+    } else {
+      return null;
+    }
   },
   setTileType: function(x, y, type) {
     this.map[y][x].type = type;
