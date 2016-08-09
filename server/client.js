@@ -2,6 +2,10 @@
 
 const world = require('./world');
 
+const WIDTH = 24;
+const HEIGHT = 28;
+const ANCHOR_X = 4;
+const ANCHOR_Y = 4;
 const MAX_BOMBS = 2;
 const SPEED = 100;
 const TICKS_PER_REFRESH_STATE = 100;
@@ -23,6 +27,8 @@ function Client(id, socket, io) {
   this.velocity = { x: 0, y: 0 };
   this.pos = { x: 0, y: 0 };
   this.input = { keys: {}, timestamps: {} };
+  this.width = WIDTH;
+  this.height = HEIGHT;
   ticks = 0;
   console.log(`Client connected: ${this.id}`);
   this.initialize();
@@ -222,6 +228,7 @@ Client.prototype.updatePos = function() {
       this.pos[axis.descriptor] += SPEED * elapsedInMs * axis.multiplier;
     }
   }, this);
+  world.resolveTileCollisions(this);
 };
 
 module.exports = Client;

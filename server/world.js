@@ -223,6 +223,63 @@ const world = {
       });
     });
   },
+  resolveTileCollisions(body) {
+    let moved = false;
+
+    if (body.velocity.x > 0) {
+      const topY = body.pos.y - body.height / 2 - 4;
+      const bottomY = body.pos.y + body.height / 2;
+      const topGridPos = this.coordsToGridPos({ x: body.pos.x + body.width / 2, y: topY });
+      const bottomGridPos = this.coordsToGridPos({ x: body.pos.x + body.width / 2, y: bottomY });
+
+      const topTile = this.getTile(topGridPos.x, topGridPos.y);
+      const bottomTile = this.getTile(bottomGridPos.x, bottomGridPos.y);
+      if ((topTile && !topTile.isPassable()) || (bottomTile && !bottomTile.isPassable())) {
+        moved = true;
+        body.pos.x = topGridPos.x * this.CELL_SIZE - body.width / 2 - 4;
+      }
+    } else if (body.velocity.x < 0) {
+      const topY = body.pos.y - body.height / 2 - 4;
+      const bottomY = body.pos.y + body.height / 2;
+      const topGridPos = this.coordsToGridPos({ x: body.pos.x - body.width / 2, y: topY });
+      const bottomGridPos = this.coordsToGridPos({ x: body.pos.x - body.width / 2, y: bottomY });
+
+      const topTile = this.getTile(topGridPos.x, topGridPos.y);
+      const bottomTile = this.getTile(bottomGridPos.x, bottomGridPos.y);
+      if ((topTile && !topTile.isPassable()) || (bottomTile && !bottomTile.isPassable())) {
+        moved = true;
+        body.pos.x = (topGridPos.x + 1) * this.CELL_SIZE + body.width / 2 + 4;
+      }
+    }
+
+    if (body.velocity.y > 0) {
+      const leftX = body.pos.x - body.width / 2 - 4;
+      const rightX = body.pos.x + body.width / 2 + 4;
+      const leftGrisPos = this.coordsToGridPos({ x: leftX, y: body.pos.y + body.height / 2 });
+      const rightGridPos = this.coordsToGridPos({ x: rightX, y: body.pos.y + body.height / 2 });
+
+      const leftTile = this.getTile(leftGrisPos.x, leftGrisPos.y);
+      const rightTile = this.getTile(rightGridPos.x, rightGridPos.y);
+      if ((leftTile && !leftTile.isPassable()) || (rightTile && !rightTile.isPassable())) {
+        moved = true;
+        body.pos.y = leftGrisPos.y * this.CELL_SIZE - body.height / 2 - 4;
+      }
+    } else if (body.velocity.y < 0) {
+      const leftX = body.pos.x - body.width / 2 - 4;
+      const rightX = body.pos.x + body.width / 2 + 4;
+      const leftGrisPos = this.coordsToGridPos({ x: leftX, y: body.pos.y - body.height / 2 });
+      const rightGridPos = this.coordsToGridPos({ x: rightX, y: body.pos.y - body.height / 2 });
+
+      const leftTile = this.getTile(leftGrisPos.x, leftGrisPos.y);
+      const rightTile = this.getTile(rightGridPos.x, rightGridPos.y);
+      if ((leftTile && !leftTile.isPassable()) || (rightTile && !rightTile.isPassable())) {
+        moved = true;
+        body.pos.y = (leftGrisPos.y + 1) * this.CELL_SIZE + body.height / 2;
+      }
+    }
+
+    return moved;
+  },
   notify: function(entity, event) {
     switch(event) {
       case events.BOMB.EXPLODE:
