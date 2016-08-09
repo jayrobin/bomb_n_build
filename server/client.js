@@ -117,10 +117,36 @@ Client.prototype.handleUpdateInput = function(input, pos) {
     }
   }, this);
 
+  if (input.keys.right !== undefined || input.keys.left !== undefined) {
+    this.correctPos('x', pos);
+  }
+
+  if (input.keys.up !== undefined || input.keys.down !== undefined) {
+    this.correctPos('y', pos);
+  }
+
   Object.assign(this.input.timestamps, timestamps);
   Object.assign(this.input.keys, input.keys);
 
   this.socket.broadcast.emit('update_input', this.id, input, this.pos);
+};
+
+Client.prototype.correctPos = function(axisDescriptor, sentPos) {
+  const MAX_CORRECT = 0.25;
+
+  if (axisDescriptor === 'y') {
+    if (Math.abs(this.pos.y - sentPos.y) < MAX_CORRECT) {
+      this.pos.y = sentPos.y;
+    } else {
+      this.socket.emit('set_pos', { y: this.pos.y });
+    }
+  } else if (axisDescriptor === 'x') {
+    if (Math.abs(this.pos.x - sentPos.x) < MAX_CORRECT) {
+      this.pos.x = sentPos.x;
+    } else {
+      this.socket.emit('set_pos', { x: this.pos.x });
+    }
+  }
 };
 
 Client.prototype.getInputTimestamps = function(input) {

@@ -100,6 +100,6 @@ var Client = {
     }.bind(this));
   },
   handleSetPos: function(pos) {
-    this.game.player.setPos(pos.x, pos.y);
+    this.game.player.setPos(pos);
   }
 };

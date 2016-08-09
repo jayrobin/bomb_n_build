@@ -70,7 +70,10 @@ LocalPlayer.prototype.updateInput = function(stop) {
     }
   }
   if (update) {
-    Client.updateInput(inputDelta, { x: this.x, y: this.y });
+    var xCompensation = this.body.velocity.x * (1 / 60);
+    var yCompensation = this.body.velocity.y * (1 / 60);
+
+    Client.updateInput(inputDelta, { x: this.x + xCompensation, y: this.y + yCompensation });
   }
 };
 

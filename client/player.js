@@ -10,6 +10,8 @@ Player.prototype.initialize = function() {
   this.anchor.setTo(0.5, 0.5);
   game.physics.arcade.enable(this);
   this.body.setSize(24, 28, 4, 4);
+  this.body.friction.x = 0;
+  this.body.friction.y = 0;
   this.label.text = this.playerName;
 };
 
@@ -130,7 +132,12 @@ Player.prototype.die = function() {
   this.kill();
 };
 
-Player.prototype.setPos = function(x, y) {
-  this.x = x;
-  this.y = y;
+Player.prototype.setPos = function(pos) {
+  if (pos.x !== undefined) {
+    this.x = pos.x;
+  }
+
+  if (pos.y !== undefined) {
+    this.y = pos.y;
+  }
 };
