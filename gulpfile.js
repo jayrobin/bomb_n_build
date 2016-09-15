@@ -30,5 +30,3 @@ gulp.task('server', ['js'], () => {
     watch: 'server/*.js'
   });
 });
-
-gulp.watch('lib/*.js', ['lib']);
