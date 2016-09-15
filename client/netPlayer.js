@@ -15,7 +15,6 @@ NetPlayer.prototype.remove = function() {
 };
 
 NetPlayer.prototype.update = function() {
-  this.updatePos();
   this.updateLabel();
   this.updateAnim(this.body.velocity.x !== 0 || this.body.velocity.y !== 0);
 };

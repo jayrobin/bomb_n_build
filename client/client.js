@@ -18,6 +18,7 @@ var Client = {
     this.socket.on('set_tile_build_speed', this.handleSetTileBuildSpeed.bind(this));
     this.socket.on('current_building_tiles', this.handleCurrentBuildingTiles.bind(this));
     this.socket.on('set_pos', this.handleSetPos.bind(this));
+    this.socket.on('set_player_pos', this.handleSetPlayerPos.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -79,8 +80,8 @@ var Client = {
     var player = this.game.findPlayerById(id);
     player.respawn(pos.x, pos.y);
   },
-  updateInput: function(input, pos) {
-    this.socket.emit('update_input', input, pos);
+  updateInput: function(input) {
+    this.socket.emit('update_input', input);
   },
   dropBomb: function(x, y) {
     this.socket.emit('drop_bomb', { x: x, y: y });
@@ -101,5 +102,9 @@ var Client = {
   },
   handleSetPos: function(pos) {
     this.game.player.setPos(pos);
+  },
+  handleSetPlayerPos: function(id, pos) {
+    var player = this.game.findPlayerById(id);
+    player.setPos(pos);
   }
 };

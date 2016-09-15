@@ -24,7 +24,6 @@ LocalPlayer.prototype.setupControls = function() {
 LocalPlayer.prototype.update = function() {
   if (this.alive) {
     this.updateInput(this.building);
-    this.updatePos();
     this.updateLabel();
     this.updateAnim(this.input.keys.up ||
                     this.input.keys.down ||
@@ -70,10 +69,7 @@ LocalPlayer.prototype.updateInput = function(stop) {
     }
   }
   if (update) {
-    var xCompensation = this.body.velocity.x * (1 / 60);
-    var yCompensation = this.body.velocity.y * (1 / 60);
-
-    Client.updateInput(inputDelta, { x: this.x + xCompensation, y: this.y + yCompensation });
+    Client.updateInput(inputDelta);
   }
 };
 

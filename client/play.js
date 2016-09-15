@@ -37,6 +37,10 @@ var playState = {
     this.players.add(player);
   },
   findPlayerById: function(id) {
+    if (id === this.player.id) {
+      return this.player;
+    }
+
     return this.players.filter(function(player) {
       if (player.id === id) {
         return player;

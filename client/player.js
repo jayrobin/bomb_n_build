@@ -54,37 +54,8 @@ Player.prototype.updateAnim = function(moving) {
   }
 };
 
-Player.prototype.updatePos = function() {
-  if (this.input.keys.up) {
-    this.body.velocity.y = -this.SPEED;
-  } else if (this.input.keys.down) {
-    this.body.velocity.y = this.SPEED;
-  } else {
-    this.body.velocity.y = 0;
-  }
-
-  if (this.input.keys.left) {
-    this.body.velocity.x = -this.SPEED;
-  } else if (this.input.keys.right) {
-    this.body.velocity.x = this.SPEED;
-  } else {
-    this.body.velocity.x = 0;
-  }
-
-  if (this.x < -this.width) {
-    this.x = game.world.width;
-  } else if (this.x > game.world.width) {
-    this.x = -this.width;
-  } else if (this.y < -this.height) {
-    this.y = game.world.height;
-  } else if (this.y > game.world.height) {
-    this.y = -this.height;
-  }
-};
-
 Player.prototype.updateLabel = function() {
-  this.label.x = this.x;
-  this.label.y = this.y;
+  game.add.tween(this.label).to({ x: this.x, y: this.y }, 33).start();
 };
 
 Player.prototype.getDirection = function() {
@@ -133,11 +104,5 @@ Player.prototype.die = function() {
 };
 
 Player.prototype.setPos = function(pos) {
-  if (pos.x !== undefined) {
-    this.x = pos.x;
-  }
-
-  if (pos.y !== undefined) {
-    this.y = pos.y;
-  }
+  game.add.tween(this).to(pos, 33).start();
 };

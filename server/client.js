@@ -26,7 +26,7 @@ function Client(id, socket, io) {
   this.bombs = [];
   this.velocity = { x: 0, y: 0 };
   this.pos = { x: 0, y: 0 };
-  this.input = { keys: {}, timestamps: {} };
+  this.input = { keys: { up: {}, down: {}, left: {}, right: {} } };
   this.width = WIDTH;
   this.height = HEIGHT;
   ticks = 0;
@@ -110,63 +110,17 @@ Client.prototype.setInitialPos = function(pos) {
   this.socket.broadcast.emit('add_player', this.id, this.playerName, this.pos, this.color);
 };
 
-Client.prototype.handleUpdateInput = function(input, pos) {
-  const timestamps = this.getInputTimestamps(input);
+Client.prototype.handleUpdateInput = function(input) {
   Object.keys(input.keys).forEach((k) => {
-    let axis = KEY_AXIS[k];
     if (!input.keys[k]) {
-      let elapsedInMs = (timestamps[k] - Math.max(this.input.timestamps[k] || 0, world.lastTick)) / 1000;
-      this.pos[axis.descriptor] += SPEED * elapsedInMs * axis.multiplier;
-      this.velocity[axis.descriptor] = 0;
+      this.input.keys[k].pressed = false;
+      this.input.keys[k].time = (this.input.keys[k].time || 0) + (world.getTime() - this.input.keys[k].timePressed);
     } else {
-      this.velocity[axis.descriptor] = SPEED * axis.multiplier;
+      this.input.keys[k].pressed = true;
+      this.input.keys[k].timePressed = world.getTime();
     }
-  }, this);
-
-  if (input.keys.right !== undefined || input.keys.left !== undefined) {
-    this.correctPos('x', pos);
-  }
-
-  if (input.keys.up !== undefined || input.keys.down !== undefined) {
-    this.correctPos('y', pos);
-  }
-
-  Object.assign(this.input.timestamps, timestamps);
-  Object.assign(this.input.keys, input.keys);
-
-  this.socket.broadcast.emit('update_input', this.id, input, this.pos);
+  });
 };
-
-Client.prototype.correctPos = function(axisDescriptor, sentPos) {
-  const MAX_CORRECT = 0.25;
-
-  if (axisDescriptor === 'y') {
-    if (Math.abs(this.pos.y - sentPos.y) < MAX_CORRECT) {
-      this.pos.y = sentPos.y;
-    } else {
-      this.socket.emit('set_pos', { y: this.pos.y });
-    }
-  } else if (axisDescriptor === 'x') {
-    if (Math.abs(this.pos.x - sentPos.x) < MAX_CORRECT) {
-      this.pos.x = sentPos.x;
-    } else {
-      this.socket.emit('set_pos', { x: this.pos.x });
-    }
-  }
-};
-
-Client.prototype.getInputTimestamps = function(input) {
-  const timestamps = {};
-  const time = world.getTime();
-  const keys = Object.keys(input.keys);
-  keys.forEach((k) => {
-    if (input.keys[k] !== this.input.keys[k]) {
-      timestamps[k] = time;
-    }
-  }, this);
-
-  return timestamps;
-}
 
 Client.prototype.handleDropBomb = function(pos) {
   if (this.bombs.length < MAX_BOMBS) {
@@ -199,35 +153,34 @@ Client.prototype.removeBomb = function(id) {
 
 Client.prototype.update = function() {
   if (this.active) {
-    if (!!this.buildingTile) {
-      this.buildingTile.update();
-    }
     this.updatePos();
-    ticks++;
-
-    if (this.shouldRefreshState()) {
-      this.socket.emit('set_pos', this.pos);
-    }
   }
 };
 
-Client.prototype.shouldRefreshState = function() {
-  return ticks % TICKS_PER_REFRESH_STATE === 0;
-}
-
 Client.prototype.updatePos = function() {
+  const worldTime = world.getTime();
+  let posChanged = false;
   KEYS.forEach((k) => {
     if (this.input.keys[k]) {
-      let axis = KEY_AXIS[k];
       let elapsedInMs;
-      if (this.input.timestamps[k] > world.lastTick) {
-        elapsedInMs = (world.getTime() - this.input.timestamps[k]) / 1000;
+      if (this.input.keys[k].pressed) {
+        elapsedInMs = worldTime - this.input.keys[k].timePressed;
+        this.input.keys[k].timePressed = worldTime;
       } else {
-        elapsedInMs = world.getElapsed() / 1000;
+        elapsedInMs = this.input.keys[k].time;
       }
-      this.pos[axis.descriptor] += SPEED * elapsedInMs * axis.multiplier;
+      this.input.keys[k].time = 0;
+
+      if (elapsedInMs) {
+        let axis = KEY_AXIS[k];
+        this.pos[axis.descriptor] += SPEED * (elapsedInMs / 1000) * axis.multiplier;
+        posChanged = true;
+      }
     }
-  }, this);
+  });
+  if (posChanged) {
+    this.io.emit('set_player_pos', this.id, this.pos);
+  }
   world.resolveTileCollisions(this);
 };
 
