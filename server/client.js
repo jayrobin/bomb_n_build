@@ -112,12 +112,16 @@ Client.prototype.setInitialPos = function(pos) {
 
 Client.prototype.handleUpdateInput = function(input) {
   Object.keys(input.keys).forEach((k) => {
+    let axis = KEY_AXIS[k];
+    let velocity = SPEED * axis.multiplier;
     if (!input.keys[k]) {
       this.input.keys[k].pressed = false;
       this.input.keys[k].time = (this.input.keys[k].time || 0) + (world.getTime() - this.input.keys[k].timePressed);
+      this.velocity[axis.descriptor] -= velocity;
     } else {
       this.input.keys[k].pressed = true;
       this.input.keys[k].timePressed = world.getTime();
+      this.velocity[axis.descriptor] += velocity;
     }
   });
 };
@@ -173,15 +177,15 @@ Client.prototype.updatePos = function() {
 
       if (elapsedInMs) {
         let axis = KEY_AXIS[k];
-        this.pos[axis.descriptor] += SPEED * (elapsedInMs / 1000) * axis.multiplier;
+        this.pos[axis.descriptor] += this.velocity[axis.descriptor] * (elapsedInMs / 1000);
         posChanged = true;
       }
     }
   });
   if (posChanged) {
+    world.resolveTileCollisions(this);
     this.io.emit('set_player_pos', this.id, this.pos);
   }
-  world.resolveTileCollisions(this);
 };
 
 module.exports = Client;
