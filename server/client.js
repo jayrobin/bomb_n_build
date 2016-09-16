@@ -126,9 +126,10 @@ Client.prototype.handleUpdateInput = function(input) {
   });
 };
 
-Client.prototype.handleDropBomb = function(pos) {
+Client.prototype.handleDropBomb = function() {
   if (this.bombs.length < MAX_BOMBS) {
-    const bomb = world.addBomb(this, pos.x, pos.y);
+    const bombPos = world.clipPosToGrid(this.pos);
+    const bomb = world.addBomb(this, bombPos.x, bombPos.y);
     if (bomb) {
       console.log(`Bomb dropped at ${bomb.pos.x}, ${bomb.pos.y}`);
       this.io.emit('drop_bomb', bomb.id, bomb.pos, bomb.fuse);

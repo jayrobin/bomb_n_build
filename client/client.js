@@ -83,8 +83,8 @@ var Client = {
   updateInput: function(input) {
     this.socket.emit('update_input', input);
   },
-  dropBomb: function(x, y) {
-    this.socket.emit('drop_bomb', { x: x, y: y });
+  dropBomb: function() {
+    this.socket.emit('drop_bomb');
   },
   respawn: function() {
     this.socket.emit('respawn');
