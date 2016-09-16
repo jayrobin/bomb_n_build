@@ -86,13 +86,13 @@ LocalPlayer.prototype.initRespawn = function() {
 LocalPlayer.prototype.onBuildKeyDown = function() {
   if (this.alive) {
     this.building = true;
-    Client.startBuilding(this.x, this.y, this.getDirection());
+    Client.startBuilding(this.getDirection());
   }
 };
 
 LocalPlayer.prototype.stopBuilding = function() {
   if (this.alive) {
     this.building = false;
-    Client.stopBuilding(this.x, this.y, this.getDirection());
+    Client.stopBuilding(this.getDirection());
   }
 };

@@ -89,11 +89,11 @@ var Client = {
   respawn: function() {
     this.socket.emit('respawn');
   },
-  startBuilding: function(x, y, direction) {
-    this.socket.emit('start_building', { x: x, y: y }, direction);
+  startBuilding: function(direction) {
+    this.socket.emit('start_building', direction);
   },
-  stopBuilding: function(x, y, direction) {
-    this.socket.emit('stop_building', { x: x, y: y }, direction);
+  stopBuilding: function(direction) {
+    this.socket.emit('stop_building', direction);
   },
   handleCurrentBuildingTiles: function(tiles) {
     tiles.forEach(function(tile) {

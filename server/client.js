@@ -65,8 +65,8 @@ Client.prototype.handleRespawn = function() {
   this.io.emit('player_respawn', this.id, this.pos);
 };
 
-Client.prototype.handleStartBuilding = function(pos, direction) {
-  let gridPos = world.coordsToGridPos(pos);
+Client.prototype.handleStartBuilding = function(direction) {
+  let gridPos = world.coordsToGridPos(this.pos);
   gridPos.x += direction.x;
   gridPos.y += direction.y;
 
@@ -79,9 +79,9 @@ Client.prototype.handleStartBuilding = function(pos, direction) {
   world.startBuilding(gridPos.x, gridPos.y);
 };
 
-Client.prototype.handleStopBuilding = function(pos, direction) {
+Client.prototype.handleStopBuilding = function(direction) {
   if (!this.buildingTile) {
-    const gridPos = world.coordsToGridPos(pos);
+    const gridPos = world.coordsToGridPos(this.pos);
     gridPos.x += direction.x;
     gridPos.y += direction.y;
     world.stopBuilding(gridPos.x, gridPos.y);
