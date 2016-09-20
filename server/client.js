@@ -23,6 +23,7 @@ function Client(id, socket, io) {
   this.socket = socket;
   this.io = io;
   this.active = false;
+  this.dirty = false;
   this.bombs = [];
   this.velocity = { x: 0, y: 0 };
   this.pos = { x: 0, y: 0 };
@@ -159,12 +160,15 @@ Client.prototype.removeBomb = function(id) {
 Client.prototype.update = function() {
   if (this.active) {
     this.updatePos();
+    if (!!this.buildingTile) {
+      this.buildingTile.update();
+    }
   }
 };
 
 Client.prototype.updatePos = function() {
   const worldTime = world.getTime();
-  let posChanged = false;
+  let targetPos;
   KEYS.forEach((k) => {
     if (this.input.keys[k]) {
       let elapsedInMs;
@@ -178,14 +182,17 @@ Client.prototype.updatePos = function() {
 
       if (elapsedInMs) {
         let axis = KEY_AXIS[k];
-        this.pos[axis.descriptor] += this.velocity[axis.descriptor] * (elapsedInMs / 1000);
-        posChanged = true;
+
+        targetPos = targetPos || { x: this.pos.x, y: this.pos.y };
+        targetPos[axis.descriptor] += this.velocity[axis.descriptor] * (elapsedInMs / 1000);
+        this.dirty = true;
       }
     }
   });
-  if (posChanged) {
-    world.resolveTileCollisions(this);
+  if (this.dirty) {
+    this.pos = world.resolveTileCollisions(this, targetPos);
     this.io.emit('set_player_pos', this.id, this.pos);
+    this.dirty = false;
   }
 };
 

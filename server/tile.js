@@ -67,7 +67,6 @@ Tile.prototype.upgrade = function() {
     break;
   }
   this.buildTimer = 0;
-
   return this.type;
 };
 
@@ -103,7 +102,7 @@ Tile.prototype.stopBuilding = function() {
 
 Tile.prototype.update = function() {
   if (this.numBuilders > 0) {
-    this.buildTimer += this.world.getElapsed() * this.numBuilders;
+    this.buildTimer += this.world.getElapsed();
     if (this.buildTimer >= BUILD_DELAYS[this.type]) {
       this.upgrade();
       this.notify(this, events.TILE.UPGRADE);

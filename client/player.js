@@ -44,14 +44,18 @@ Player.prototype.setupAnimations = function() {
   this.animations.play('down_idle');
 };
 
-Player.prototype.updateAnim = function(moving) {
+Player.prototype.playWalkAnim = function() {
   var direction = this.getDirectionAsString();
+  var animTitle = direction + '_walk';
 
-  if (moving) {
-    this.animations.play(direction + '_walk');
-  } else {
-    this.animations.play(direction + '_idle');
+  if (this.animations.currentAnim.name !== animTitle) {
+    this.animations.play(animTitle);
   }
+};
+
+Player.prototype.playIdleAnim = function() {
+  var direction = this.getDirectionAsString();
+  this.animations.play(direction + '_idle');
 };
 
 Player.prototype.updateLabel = function() {
@@ -104,5 +108,10 @@ Player.prototype.die = function() {
 };
 
 Player.prototype.setPos = function(pos) {
-  game.add.tween(this).to(pos, 33).start();
+  this.moving = true;
+  var moveTween = game.add.tween(this);
+  moveTween.to(pos, 33);
+  moveTween.onComplete.add(function() { this.playIdleAnim(); }.bind(this));
+  moveTween.start();
+  this.playWalkAnim();
 };

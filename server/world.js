@@ -223,62 +223,55 @@ const world = {
       });
     });
   },
-  resolveTileCollisions(body) {
-    let moved = false;
-
-    if (body.velocity.x > 0) {
-      const topY = body.pos.y - body.height / 2 - 4;
-      const bottomY = body.pos.y + body.height / 2;
-      const topGridPos = this.coordsToGridPos({ x: body.pos.x + body.width / 2, y: topY });
-      const bottomGridPos = this.coordsToGridPos({ x: body.pos.x + body.width / 2, y: bottomY });
-
-      const topTile = this.getTile(topGridPos.x, topGridPos.y);
-      const bottomTile = this.getTile(bottomGridPos.x, bottomGridPos.y);
-      if ((topTile && !topTile.isPassable()) || (bottomTile && !bottomTile.isPassable())) {
-        moved = true;
-        body.pos.x = topGridPos.x * this.CELL_SIZE - body.width / 2 - 4;
-      }
-    } else if (body.velocity.x < 0) {
-      const topY = body.pos.y - body.height / 2 - 4;
-      const bottomY = body.pos.y + body.height / 2;
-      const topGridPos = this.coordsToGridPos({ x: body.pos.x - body.width / 2, y: topY });
-      const bottomGridPos = this.coordsToGridPos({ x: body.pos.x - body.width / 2, y: bottomY });
-
-      const topTile = this.getTile(topGridPos.x, topGridPos.y);
-      const bottomTile = this.getTile(bottomGridPos.x, bottomGridPos.y);
-      if ((topTile && !topTile.isPassable()) || (bottomTile && !bottomTile.isPassable())) {
-        moved = true;
-        body.pos.x = (topGridPos.x + 1) * this.CELL_SIZE + body.width / 2 + 4;
-      }
-    }
-
+  resolveTileCollisions(body, targetPos) {
     if (body.velocity.y > 0) {
-      const leftX = body.pos.x - body.width / 2 - 4;
-      const rightX = body.pos.x + body.width / 2 + 4;
-      const leftGrisPos = this.coordsToGridPos({ x: leftX, y: body.pos.y + body.height / 2 });
-      const rightGridPos = this.coordsToGridPos({ x: rightX, y: body.pos.y + body.height / 2 });
+      const leftX = body.pos.x - body.width / 2 + 1;
+      const rightX = body.pos.x + body.width / 2 - 1;
+      const leftGridPos = this.coordsToGridPos({ x: leftX, y: targetPos.y + body.height / 2 + 4 });
+      const rightGridPos = this.coordsToGridPos({ x: rightX, y: targetPos.y + body.height / 2 + 4 });
 
-      const leftTile = this.getTile(leftGrisPos.x, leftGrisPos.y);
+      const leftTile = this.getTile(leftGridPos.x, leftGridPos.y);
       const rightTile = this.getTile(rightGridPos.x, rightGridPos.y);
       if ((leftTile && !leftTile.isPassable()) || (rightTile && !rightTile.isPassable())) {
-        moved = true;
-        body.pos.y = leftGrisPos.y * this.CELL_SIZE - body.height / 2 - 4;
+        targetPos.y = leftGridPos.y * this.CELL_SIZE - body.height / 2 - 4;
       }
     } else if (body.velocity.y < 0) {
-      const leftX = body.pos.x - body.width / 2 - 4;
-      const rightX = body.pos.x + body.width / 2 + 4;
-      const leftGrisPos = this.coordsToGridPos({ x: leftX, y: body.pos.y - body.height / 2 });
-      const rightGridPos = this.coordsToGridPos({ x: rightX, y: body.pos.y - body.height / 2 });
+      const leftX = body.pos.x - body.width / 2 + 1;
+      const rightX = body.pos.x + body.width / 2 - 1;
+      const leftGridPos = this.coordsToGridPos({ x: leftX, y: targetPos.y - body.height / 2 });
+      const rightGridPos = this.coordsToGridPos({ x: rightX, y: targetPos.y - body.height / 2 });
 
-      const leftTile = this.getTile(leftGrisPos.x, leftGrisPos.y);
+      const leftTile = this.getTile(leftGridPos.x, leftGridPos.y);
       const rightTile = this.getTile(rightGridPos.x, rightGridPos.y);
       if ((leftTile && !leftTile.isPassable()) || (rightTile && !rightTile.isPassable())) {
-        moved = true;
-        body.pos.y = (leftGrisPos.y + 1) * this.CELL_SIZE + body.height / 2;
+        targetPos.y = (leftGridPos.y + 1) * this.CELL_SIZE + body.height / 2;
       }
     }
 
-    return moved;
+    if (body.velocity.x > 0) {
+      const topY = body.pos.y - body.height / 2 + 1;
+      const bottomY = body.pos.y + body.height / 2 - 1;
+      const topGridPos = this.coordsToGridPos({ x: targetPos.x + body.width / 2, y: topY });
+      const bottomGridPos = this.coordsToGridPos({ x: targetPos.x + body.width / 2, y: bottomY });
+
+      const topTile = this.getTile(topGridPos.x, topGridPos.y);
+      const bottomTile = this.getTile(bottomGridPos.x, bottomGridPos.y);
+      if ((topTile && !topTile.isPassable()) || (bottomTile && !bottomTile.isPassable())) {
+        targetPos.x = topGridPos.x * this.CELL_SIZE - body.width / 2;
+      }
+    } else if (body.velocity.x < 0) {
+      const topY = body.pos.y - body.height / 2 + 1;
+      const bottomY = body.pos.y + body.height / 2 - 1;
+      const topGridPos = this.coordsToGridPos({ x: targetPos.x - body.width / 2, y: topY });
+      const bottomGridPos = this.coordsToGridPos({ x: targetPos.x - body.width / 2, y: bottomY });
+
+      const topTile = this.getTile(topGridPos.x, topGridPos.y);
+      const bottomTile = this.getTile(bottomGridPos.x, bottomGridPos.y);
+      if ((topTile && !topTile.isPassable()) || (bottomTile && !bottomTile.isPassable())) {
+        targetPos.x = (topGridPos.x + 1) * this.CELL_SIZE + body.width / 2;
+      }
+    }
+    return targetPos;
   },
   notify: function(entity, event) {
     switch(event) {

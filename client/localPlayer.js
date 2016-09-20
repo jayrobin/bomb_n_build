@@ -25,10 +25,6 @@ LocalPlayer.prototype.update = function() {
   if (this.alive) {
     this.updateInput(this.building);
     this.updateLabel();
-    this.updateAnim(this.input.keys.up ||
-                    this.input.keys.down ||
-                    this.input.keys.left ||
-                    this.input.keys.right);
   }
 };
 
@@ -45,11 +41,13 @@ LocalPlayer.prototype.updateInput = function(stop) {
   } else {
     if (this.input.keys.up !== this.cursor.up.isDown) {
       this.input.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
+      this.body.facing = Phaser.UP;
       if (this.input.keys.down) {
         this.input.keys.down = inputDelta.keys.down = false;
       }
       update = true;
     } else if (this.input.keys.down !== this.cursor.down.isDown) {
+      this.body.facing = Phaser.DOWN;
       if (!this.input.keys.up) {
         this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
         update = true;
@@ -57,11 +55,13 @@ LocalPlayer.prototype.updateInput = function(stop) {
     }
     if (this.input.keys.left !== this.cursor.left.isDown) {
       this.input.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
+      this.body.facing = Phaser.LEFT;
       if (this.input.keys.right) {
         this.input.keys.right = inputDelta.keys.right = false;
       }
       update = true;
     } else if (this.input.keys.right !== this.cursor.right.isDown) {
+      this.body.facing = Phaser.RIGHT;
       if (!this.input.keys.left) {
         this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
         update = true;
