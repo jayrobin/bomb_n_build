@@ -21,10 +21,6 @@ var playState = {
       this.players.forEach(function(player) {
         player.update();
       });
-
-      this.game.physics.arcade.collide(this.players, this.world.tiles);
-      this.game.physics.arcade.collide(this.players, this.bombs);
-      this.game.physics.arcade.overlap(this.players, this.explosions, this.handlePlayerExplosionOverlap, null, this);
     }
   },
   createPlayer: function(id, playerName, x, y, color) {
@@ -99,7 +95,7 @@ var playState = {
 
     return buildIndicator;
   },
-  handlePlayerExplosionOverlap: function(player, _explosion) {
+  handlePlayerDie: function(player, _explosion) {
     if (player === this.player) {
       this.player.stopBuilding();
       this.showDeathScreen();

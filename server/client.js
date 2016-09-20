@@ -25,12 +25,11 @@ function Client(id, socket, io) {
   this.active = false;
   this.dirty = false;
   this.bombs = [];
-  this.velocity = { x: 0, y: 0 };
   this.pos = { x: 0, y: 0 };
-  this.input = { keys: { up: {}, down: {}, left: {}, right: {} } };
   this.width = WIDTH;
   this.height = HEIGHT;
   ticks = 0;
+  this.resetInput();
   console.log(`Client connected: ${this.id}`);
   this.initialize();
 }
@@ -55,6 +54,11 @@ Client.prototype.setupListeners = function() {
   this.socket.on('stop_building', this.handleStopBuilding.bind(this));
 };
 
+Client.prototype.resetInput = function() {
+  this.input = { keys: { up: {}, down: {}, left: {}, right: {} } };
+  this.velocity = { x: 0, y: 0 };
+};
+
 Client.prototype.handleSetName = function(playerName) {
   this.setName(playerName);
   this.setInitialPos(world.getRandomPos(), this.getColor());
@@ -67,31 +71,34 @@ Client.prototype.handleRespawn = function() {
 };
 
 Client.prototype.handleStartBuilding = function(direction) {
-  let gridPos = world.coordsToGridPos(this.pos);
-  gridPos.x += direction.x;
-  gridPos.y += direction.y;
+  if (this.alive) {
+    let gridPos = world.coordsToGridPos(this.pos);
+    gridPos.x += direction.x;
+    gridPos.y += direction.y;
 
-  if (this.buildingTile) {
-    gridPos = this.buildingTile.pos;
-    world.stopBuilding(gridPos.x, gridPos.y);
+    if (this.buildingTile) {
+      gridPos = this.buildingTile.pos;
+      world.stopBuilding(gridPos.x, gridPos.y);
+    }
+
+    this.buildingTile = world.getTile(gridPos.x, gridPos.y);
+    world.startBuilding(gridPos.x, gridPos.y);
+    this.resetInput();
   }
-
-  this.buildingTile = world.getTile(gridPos.x, gridPos.y);
-  world.startBuilding(gridPos.x, gridPos.y);
-  this.input = { keys: { up: {}, down: {}, left: {}, right: {} } };
-  this.velocity = { x: 0, y: 0 };
 };
 
 Client.prototype.handleStopBuilding = function(direction) {
-  if (!this.buildingTile) {
-    const gridPos = world.coordsToGridPos(this.pos);
-    gridPos.x += direction.x;
-    gridPos.y += direction.y;
-    world.stopBuilding(gridPos.x, gridPos.y);
-  } else {
-    const gridPos = this.buildingTile.pos;
-    world.stopBuilding(gridPos.x, gridPos.y);
-    this.buildingTile = null;
+  if (this.alive) {
+    if (!this.buildingTile) {
+      const gridPos = world.coordsToGridPos(this.pos);
+      gridPos.x += direction.x;
+      gridPos.y += direction.y;
+      world.stopBuilding(gridPos.x, gridPos.y);
+    } else {
+      const gridPos = this.buildingTile.pos;
+      world.stopBuilding(gridPos.x, gridPos.y);
+      this.buildingTile = null;
+    }
   }
 };
 
@@ -133,7 +140,7 @@ Client.prototype.handleUpdateInput = function(input) {
 };
 
 Client.prototype.handleDropBomb = function() {
-  if (this.bombs.length < MAX_BOMBS) {
+  if (this.alive && this.bombs.length < MAX_BOMBS) {
     const bombPos = world.clipPosToGrid(this.pos);
     const bomb = world.addBomb(this, bombPos.x, bombPos.y);
     if (bomb) {
@@ -164,6 +171,11 @@ Client.prototype.removeBomb = function(id) {
   this.bombs = this.bombs.filter(function(bomb) {
     return bomb.id !== id;
   });
+};
+
+Client.prototype.kill = function(id) {
+  this.alive = false;
+  this.resetInput();
 };
 
 Client.prototype.update = function() {

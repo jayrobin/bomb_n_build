@@ -163,11 +163,35 @@ const world = {
       }
     }
 
+    const bombRect = {
+      x: (x - 1) * this.CELL_SIZE,
+      y: (y - 1) * this.CELL_SIZE,
+      width: 3 * this.CELL_SIZE,
+      height: 3 * this.CELL_SIZE
+    };
+    this.clients.forEach((player) => {
+      let playerRect = { x: player.pos.x - player.width / 2, y: player.pos.y - player.height / 2, width: player.width, height: player.height };
+      if (this.checkOverlapping(playerRect, bombRect)) {
+        player.kill();
+        this.server.emit('kill_player', player.id);
+      }
+    });
+
     this.server.emit('create_explosions', explosions);
 
     overlappingBombs.forEach(function(bomb) {
       bomb.explode();
     });
+  },
+  checkOverlapping(rect1, rect2) {
+      // top left
+    return ((rect1.x >= rect2.x && rect1.x <= rect2.x + rect2.width) && (rect1.y >= rect2.y && rect1.y <= rect2.y + rect2.height) ||
+      // top right
+      (rect1.x + rect1.width >= rect2.x && rect1.x + rect1.width <= rect2.x + rect2.width) && (rect1.y >= rect2.y && rect1.y <= rect2.y + rect2.height) ||
+      // bottom left
+      (rect1.x >= rect2.x && rect1.x <= rect2.x + rect2.width) && (rect1.y + rect1.height >= rect2.y && rect1.y + rect1.height <= rect2.y + rect2.height) ||
+      // bottom right
+      (rect1.x + rect1.width >= rect2.x && rect1.x + rect1.width <= rect2.x + rect2.width) && (rect1.y + rect1.height >= rect2.y && rect1.y + rect1.height <= rect2.y + rect2.height));
   },
   tick: function() {
     this.bombs.forEach((bomb) => {

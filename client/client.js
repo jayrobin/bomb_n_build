@@ -12,6 +12,7 @@ var Client = {
     this.socket.on('update_input', this.handleUpdateInput.bind(this));
     this.socket.on('drop_bomb', this.handleDropBomb.bind(this));
     this.socket.on('remove_bomb', this.handleRemoveBomb.bind(this));
+    this.socket.on('kill_player', this.handleKillPlayer.bind(this));
     this.socket.on('set_tile', this.handleSetTile.bind(this));
     this.socket.on('create_explosions', this.handleCreateExplosions.bind(this));
     this.socket.on('player_respawn', this.handlePlayerRespawn.bind(this));
@@ -63,6 +64,10 @@ var Client = {
   handleRemoveBomb: function(id) {
     console.log("Removing bomb " + id);
     this.game.removeBomb(id);
+  },
+  handleKillPlayer: function(id) {
+    var player = this.game.findPlayerById(id);
+    this.game.handlePlayerDie(player);
   },
   handleSetTile: function(pos, tileState) {
     console.log("Setting tile " + pos.x + ", " + pos.y + " (" + tileState + ")");
