@@ -20,6 +20,7 @@ var Client = {
     this.socket.on('current_building_tiles', this.handleCurrentBuildingTiles.bind(this));
     this.socket.on('set_pos', this.handleSetPos.bind(this));
     this.socket.on('set_player_pos', this.handleSetPlayerPos.bind(this));
+    this.socket.on('update_players', this.handleUpdatePlayers.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -111,5 +112,11 @@ var Client = {
   handleSetPlayerPos: function(id, pos) {
     var player = this.game.findPlayerById(id);
     player.setPos(pos);
+  },
+  handleUpdatePlayers: function(updates) {
+    updates.forEach(function(update) {
+      var player = this.game.findPlayerById(update.id);
+      player.setPos(update.pos);
+    }.bind(this));
   }
 };

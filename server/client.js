@@ -213,8 +213,6 @@ Client.prototype.updatePos = function() {
   });
   if (this.dirty) {
     this.pos = world.resolveTileCollisions(this, targetPos);
-    this.io.emit('set_player_pos', this.id, this.pos);
-    this.dirty = false;
   }
 };
 
