@@ -78,6 +78,8 @@ Client.prototype.handleStartBuilding = function(direction) {
 
   this.buildingTile = world.getTile(gridPos.x, gridPos.y);
   world.startBuilding(gridPos.x, gridPos.y);
+  this.input = { keys: { up: {}, down: {}, left: {}, right: {} } };
+  this.velocity = { x: 0, y: 0 };
 };
 
 Client.prototype.handleStopBuilding = function(direction) {
@@ -125,6 +127,9 @@ Client.prototype.handleUpdateInput = function(input) {
       this.velocity[axis.descriptor] += velocity;
     }
   });
+
+  this.velocity.x = Math.min(Math.max(this.velocity.x, -SPEED), SPEED);
+  this.velocity.y = Math.min(Math.max(this.velocity.y, -SPEED), SPEED);
 };
 
 Client.prototype.handleDropBomb = function() {
@@ -137,6 +142,10 @@ Client.prototype.handleDropBomb = function() {
       this.bombs.push(bomb);
     }
   }
+};
+
+Client.prototype.isBuilding = function() {
+  return !!this.buildingTile;
 };
 
 Client.prototype.setName = function(playerName) {
@@ -159,9 +168,10 @@ Client.prototype.removeBomb = function(id) {
 
 Client.prototype.update = function() {
   if (this.active) {
-    this.updatePos();
-    if (!!this.buildingTile) {
+    if (this.isBuilding()) {
       this.buildingTile.update();
+    } else {
+      this.updatePos();
     }
   }
 };

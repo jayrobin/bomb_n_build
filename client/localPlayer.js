@@ -23,53 +23,61 @@ LocalPlayer.prototype.setupControls = function() {
 
 LocalPlayer.prototype.update = function() {
   if (this.alive) {
-    this.updateInput(this.building);
+    this.updateInput();
     this.updateLabel();
   }
 };
 
-LocalPlayer.prototype.updateInput = function(stop) {
+LocalPlayer.prototype.updateInput = function(force) {
   var inputDelta = {
     keys: {}
   };
-
   var update = false;
 
-  if (stop) {
-    update = true;
-    this.resetInput();
-  } else {
-    if (this.input.keys.up !== this.cursor.up.isDown) {
-      this.input.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
-      this.body.facing = Phaser.UP;
-      if (this.input.keys.down) {
-        this.input.keys.down = inputDelta.keys.down = false;
-      }
-      update = true;
-    } else if (this.input.keys.down !== this.cursor.down.isDown) {
-      this.body.facing = Phaser.DOWN;
-      if (!this.input.keys.up) {
-        this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
-        update = true;
-      }
+  if (this.input.keys.up !== this.cursor.up.isDown) {
+    this.input.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
+    this.body.facing = Phaser.UP;
+    if (this.input.keys.down) {
+      this.input.keys.down = inputDelta.keys.down = false;
     }
-    if (this.input.keys.left !== this.cursor.left.isDown) {
-      this.input.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
-      this.body.facing = Phaser.LEFT;
-      if (this.input.keys.right) {
-        this.input.keys.right = inputDelta.keys.right = false;
-      }
+    update = true;
+  } else if (this.input.keys.down !== this.cursor.down.isDown) {
+    this.body.facing = Phaser.DOWN;
+    if (!this.input.keys.up) {
+      this.input.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
       update = true;
-    } else if (this.input.keys.right !== this.cursor.right.isDown) {
-      this.body.facing = Phaser.RIGHT;
-      if (!this.input.keys.left) {
-        this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
-        update = true;
-      }
     }
   }
+  if (this.input.keys.left !== this.cursor.left.isDown) {
+    this.input.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
+    this.body.facing = Phaser.LEFT;
+    if (this.input.keys.right) {
+      this.input.keys.right = inputDelta.keys.right = false;
+    }
+    update = true;
+  } else if (this.input.keys.right !== this.cursor.right.isDown) {
+    this.body.facing = Phaser.RIGHT;
+    if (!this.input.keys.left) {
+      this.input.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
+      update = true;
+    }
+  }
+
   if (update) {
     Client.updateInput(inputDelta);
+  } else if (force) {
+    var forcedKeys = { keys: {} };
+    if (this.cursor.up.isDown) {
+      forcedKeys.keys.up = true;
+    } else if (this.cursor.down.isDown) {
+      forcedKeys.keys.down = true;
+    }
+    if (this.cursor.left.isDown) {
+      forcedKeys.keys.left = true;
+    } else if (this.cursor.right.isDown) {
+      forcedKeys.keys.right = true;
+    }
+    Client.updateInput(forcedKeys);
   }
 };
 
@@ -93,6 +101,7 @@ LocalPlayer.prototype.onBuildKeyDown = function() {
 LocalPlayer.prototype.stopBuilding = function() {
   if (this.alive) {
     this.building = false;
+    this.updateInput(true);
     Client.stopBuilding(this.getDirection());
   }
 };
