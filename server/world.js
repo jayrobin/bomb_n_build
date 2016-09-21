@@ -75,6 +75,11 @@ const world = {
       const bomb = new Bomb(player, rnd.generate(8), pos.x, pos.y, this);
       bomb.addObserver(this, events.BOMB.EXPLODE);
       this.bombs.push(bomb);
+
+      const gridPos = this.coordsToGridPos(pos);
+      const tile = this.getTile(gridPos.x, gridPos.y);
+      tile.bomb = bomb;
+
       return bomb;
     }
   },
@@ -134,6 +139,8 @@ const world = {
   },
   detonateBomb: function(bomb) {
     const gridPos = this.coordsToGridPos(bomb.pos);
+    const tile = this.getTile(gridPos.x, gridPos.y);
+    tile.bomb = null;
     this.createExplosion(gridPos.x, gridPos.y, bomb.player);
     this.removeBomb(bomb.id);
     bomb.removeObserver(this, events.BOMB.EXPLODE);
