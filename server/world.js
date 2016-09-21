@@ -134,11 +134,11 @@ const world = {
   },
   detonateBomb: function(bomb) {
     const gridPos = this.coordsToGridPos(bomb.pos);
-    this.createExplosion(gridPos.x, gridPos.y);
+    this.createExplosion(gridPos.x, gridPos.y, bomb.player);
     this.removeBomb(bomb.id);
     bomb.removeObserver(this, events.BOMB.EXPLODE);
   },
-  createExplosion: function(x, y) {
+  createExplosion: function(x, y, owner) {
     const explosions = [];
     let overlappingBombs = [];
     for (let gy = y - 1; gy <= y + 1; gy++) {
@@ -169,15 +169,27 @@ const world = {
       width: 3 * this.CELL_SIZE,
       height: 3 * this.CELL_SIZE
     };
+
+    let anyPlayersKilled = false;
     this.clients.forEach((player) => {
-      let playerRect = { x: player.pos.x - player.width / 2, y: player.pos.y - player.height / 2, width: player.width, height: player.height };
-      if (this.checkOverlapping(playerRect, bombRect)) {
-        player.kill();
-        this.server.emit('kill_player', player.id);
+      if (player.active) {
+        let playerRect = { x: player.pos.x - player.width / 2, y: player.pos.y - player.height / 2, width: player.width, height: player.height };
+        if (this.checkOverlapping(playerRect, bombRect)) {
+          player.kill();
+          this.server.emit('kill_player', player.id);
+          if (player !== owner) {
+            anyPlayersKilled = true;
+            owner.score++;
+          }
+        }
       }
     });
 
     this.server.emit('create_explosions', explosions);
+
+    if (anyPlayersKilled) {
+      this.server.emit('set_player_score', owner.id, owner.score);
+    }
 
     overlappingBombs.forEach(function(bomb) {
       bomb.explode();

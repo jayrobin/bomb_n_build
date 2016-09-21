@@ -26,6 +26,7 @@ function Client(id, socket, io) {
   this.dirty = false;
   this.bombs = [];
   this.pos = { x: 0, y: 0 };
+  this.score = 0;
   this.width = WIDTH;
   this.height = HEIGHT;
   ticks = 0;
@@ -67,11 +68,13 @@ Client.prototype.handleSetName = function(playerName) {
 Client.prototype.handleRespawn = function() {
   const pos = world.getRandomPos();
   this.pos = pos;
+  this.active = true;
+  this.score = 0;
   this.io.emit('player_respawn', this.id, this.pos);
 };
 
 Client.prototype.handleStartBuilding = function(direction) {
-  if (this.alive) {
+  if (this.active) {
     let gridPos = world.coordsToGridPos(this.pos);
     gridPos.x += direction.x;
     gridPos.y += direction.y;
@@ -88,7 +91,7 @@ Client.prototype.handleStartBuilding = function(direction) {
 };
 
 Client.prototype.handleStopBuilding = function(direction) {
-  if (this.alive) {
+  if (this.active) {
     if (!this.buildingTile) {
       const gridPos = world.coordsToGridPos(this.pos);
       gridPos.x += direction.x;
@@ -140,7 +143,7 @@ Client.prototype.handleUpdateInput = function(input) {
 };
 
 Client.prototype.handleDropBomb = function() {
-  if (this.alive && this.bombs.length < MAX_BOMBS) {
+  if (this.active && this.bombs.length < MAX_BOMBS) {
     const bombPos = world.clipPosToGrid(this.pos);
     const bomb = world.addBomb(this, bombPos.x, bombPos.y);
     if (bomb) {
@@ -174,7 +177,7 @@ Client.prototype.removeBomb = function(id) {
 };
 
 Client.prototype.kill = function(id) {
-  this.alive = false;
+  this.active = false;
   this.resetInput();
 };
 

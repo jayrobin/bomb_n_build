@@ -4,6 +4,7 @@ Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
 Player.prototype.initialize = function() {
+  this.score = 0;
   this.SPEED = 100;
   this.resetInput();
   this.setupAnimations();
