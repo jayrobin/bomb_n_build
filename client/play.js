@@ -138,6 +138,26 @@ var playState = {
     var showAllPlayersKey = game.input.keyboard.addKey(Phaser.Keyboard.TAB);
     showAllPlayersKey.onDown.add(this.showPlayerList, this);
     showAllPlayersKey.onUp.add(this.hidePlayerList, this);
+
+    this.highscoreLabel = game.add.text(0, 0, "", { font: "12px Arial", fill: "#ffffff", align: "left" });
+    this.highscoreLabel.fixedToCamera = true;
+    this.highscoreLabel.anchor.setTo(0, 0);
+    this.highscoreLabel.visible = true;
+  },
+  setPlayerScore: function(player, score) {
+    player.setScore(score);
+
+    var sortedPlayers = this.players.children.sort(function(a, b) {
+      return a.score - b.score;
+    });
+
+    var topPlayers = sortedPlayers.slice(0, Math.min(sortedPlayers.length, 5));
+    var playerList = "";
+    topPlayers.forEach(function(player) {
+      playerList += player.score + ' - ' + player.playerName + '\n';
+    });
+
+    this.highscoreLabel.text = playerList;
   },
   showDeathScreen: function() {
     this.respawnLabel.visible = true;
@@ -145,7 +165,7 @@ var playState = {
   showPlayerList: function() {
     var playerList = "";
     this.players.forEach(function(player) {
-      playerList += player.playerName + "\n";
+      playerList += player.playerName + " (" + player.score + ")\n";
     });
     this.playerListLabel.text = playerList;
     this.playerListLabel.visible = true;

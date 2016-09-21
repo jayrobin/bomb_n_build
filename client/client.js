@@ -116,7 +116,7 @@ var Client = {
   },
   handleSetPlayerScore: function(id, score) {
     var player = this.game.findPlayerById(id);
-    player.setScore(score);
+    this.game.setPlayerScore(player, score);
   },
   handleUpdatePlayers: function(updates) {
     updates.forEach(function(update) {
