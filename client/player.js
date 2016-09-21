@@ -13,7 +13,7 @@ Player.prototype.initialize = function() {
   this.body.setSize(24, 28, 4, 4);
   this.body.friction.x = 0;
   this.body.friction.y = 0;
-  this.label.text = this.playerName;
+  this.label.text = this.playerName + ' (0)';
 };
 
 Player.prototype.resetInput = function() {
@@ -105,6 +105,7 @@ Player.prototype.getDirectionAsString = function() {
 
 Player.prototype.die = function() {
   this.label.visible = false;
+  this.label.text = this.playerName + ' (0)';
   this.kill();
 };
 
@@ -115,4 +116,9 @@ Player.prototype.setPos = function(pos) {
   moveTween.onComplete.add(function() { this.playIdleAnim(); }.bind(this));
   moveTween.start();
   this.playWalkAnim();
+};
+
+Player.prototype.setScore = function(score) {
+  this.score = score;
+  this.label.text = this.playerName + ' (' + score + ')';
 };
