@@ -129,8 +129,10 @@ Client.prototype.handleUpdateInput = function(input) {
     let velocity = SPEED * axis.multiplier;
     if (!input.keys[k]) {
       this.input.keys[k].pressed = false;
-      this.input.keys[k].time = (this.input.keys[k].time || 0) + (world.getTime() - this.input.keys[k].timePressed);
-      this.velocity[axis.descriptor] -= velocity;
+      if (this.input.keys[k].timePressed > 0) {
+        this.input.keys[k].time = (this.input.keys[k].time || 0) + (world.getTime() - this.input.keys[k].timePressed);
+        this.velocity[axis.descriptor] -= velocity;
+      }
     } else {
       this.input.keys[k].pressed = true;
       this.input.keys[k].timePressed = world.getTime();
