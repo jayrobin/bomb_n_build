@@ -3,7 +3,7 @@
 const events = require('./events');
 const Subject = require('./subject');
 
-const BUILD_DELAYS = [0, 0, 1500, 1500, 1500, 3000, 6000, 15000, 30000];
+const BUILD_DELAYS = [0, 0, 1000, 1000, 1000, 2000, 4000, 10000, 20000];
 
 function Tile(pos, type, world) {
   Subject.call(this);
