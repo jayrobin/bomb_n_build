@@ -159,7 +159,8 @@ Client.prototype.isBuilding = function() {
 };
 
 Client.prototype.setName = function(playerName) {
-  if (playerName.length > 2 && playerName.length < 15) {
+  playerName = playerName.replace(/[^ A-Za-z0-9]+/gi, '').trim();
+  if (playerName.length > 2 && playerName.length < 15 && !world.getClientByName(playerName)) {
     this.playerName = playerName;
   } else {
     this.playerName = "Guest" + Math.floor(Math.random() * 999);

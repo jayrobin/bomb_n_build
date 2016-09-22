@@ -69,6 +69,11 @@ const world = {
       };
     });
   },
+  getClientByName: function(playerName) {
+    return this.clients.filter((client) => {
+      return client.playerName === playerName;
+    })[0];
+  },
   getBombPositions: function() {
     return this.bombs.map((bomb) => {
       return { id: bomb.id, pos: bomb.pos, fuse: bomb.fuse };
