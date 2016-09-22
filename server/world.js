@@ -298,10 +298,10 @@ const world = {
     const currentTile = this.getTile(currentGridPos.x, currentGridPos.y);
 
     let playerPoints = [
-      { x: body.pos.x - body.width / 2, y: body.pos.y - body.height / 2 },
-      { x: body.pos.x + body.width / 2, y: body.pos.y - body.height / 2 },
-      { x: body.pos.x - body.width / 2, y: body.pos.y + body.height / 2 },
-      { x: body.pos.x + body.width / 2, y: body.pos.y + body.height / 2 }
+      { x: body.pos.x - body.width / 2 + 1, y: body.pos.y - body.height / 2 + 1 },
+      { x: body.pos.x + body.width / 2 - 1, y: body.pos.y - body.height / 2 + 1 },
+      { x: body.pos.x - body.width / 2 + 1, y: body.pos.y + body.height / 2 - 1 },
+      { x: body.pos.x + body.width / 2 - 1, y: body.pos.y + body.height / 2 - 1 }
     ];
 
     const overlappingTiles = playerPoints.map((point) => {
