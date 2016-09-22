@@ -76,8 +76,8 @@ Client.prototype.handleRespawn = function() {
 Client.prototype.handleStartBuilding = function(direction) {
   if (this.active) {
     let gridPos = world.coordsToGridPos(this.pos);
-    gridPos.x += direction.x;
-    gridPos.y += direction.y;
+    gridPos.x += direction.x * 2;
+    gridPos.y += direction.y * 2;
 
     if (this.buildingTile) {
       gridPos = this.buildingTile.pos;

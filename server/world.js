@@ -117,7 +117,7 @@ const world = {
   },
   startBuilding: function(x, y) {
     const tile = this.getTile(x, y);
-    if (tile.isUpgradable()) {
+    if (tile && tile.isUpgradable()) {
       tile.startBuilding();
       this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
     }
