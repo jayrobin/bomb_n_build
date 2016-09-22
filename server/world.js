@@ -292,6 +292,28 @@ const world = {
     const currentGridPos = this.coordsToGridPos(body.pos);
     const currentTile = this.getTile(currentGridPos.x, currentGridPos.y);
 
+    let playerPoints = [
+      { x: body.pos.x - body.width / 2, y: body.pos.y - body.height / 2 },
+      { x: body.pos.x + body.width / 2, y: body.pos.y - body.height / 2 },
+      { x: body.pos.x - body.width / 2, y: body.pos.y + body.height / 2 },
+      { x: body.pos.x + body.width / 2, y: body.pos.y + body.height / 2 }
+    ];
+
+    const overlappingTiles = playerPoints.map((point) => {
+      let gridPos = this.coordsToGridPos(point);
+      return this.getTile(gridPos.x, gridPos.y);
+    }).filter((tile) => {
+      return !tile.isPassable(currentTile);
+    });
+
+    if (overlappingTiles.length > 0) {
+      targetPos = {
+        x: currentTile.pos.x * this.CELL_SIZE + this.CELL_SIZE / 2,
+        y: currentTile.pos.y * this.CELL_SIZE + this.CELL_SIZE / 2
+      };
+      return targetPos
+    }
+
     if (body.velocity.y > 0) {
       const leftX = body.pos.x - body.width / 2 + 1;
       const rightX = body.pos.x + body.width / 2 - 1;
