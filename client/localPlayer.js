@@ -34,31 +34,36 @@ LocalPlayer.prototype.updateInput = function(force) {
   };
   var update = false;
 
-  if (this.inputState.keys.up !== this.cursor.up.isDown) {
-    this.inputState.keys.up = inputDelta.keys.up = this.cursor.up.isDown;
+  var upPressed = this.cursor.up.isDown || game.input.keyboard.isDown(Phaser.Keyboard.W);
+  var downPressed = this.cursor.down.isDown || game.input.keyboard.isDown(Phaser.Keyboard.S);
+  var leftPressed = this.cursor.left.isDown || game.input.keyboard.isDown(Phaser.Keyboard.A);
+  var rightPressed = this.cursor.right.isDown || game.input.keyboard.isDown(Phaser.Keyboard.D);
+
+  if (this.inputState.keys.up !== upPressed) {
+    this.inputState.keys.up = inputDelta.keys.up = upPressed;
     this.body.facing = Phaser.UP;
     if (this.inputState.keys.down) {
       this.inputState.keys.down = inputDelta.keys.down = false;
     }
     update = true;
-  } else if (this.inputState.keys.down !== this.cursor.down.isDown) {
+  } else if (this.inputState.keys.down !== downPressed) {
     this.body.facing = Phaser.DOWN;
     if (!this.inputState.keys.up) {
       this.inputState.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
       update = true;
     }
   }
-  if (this.inputState.keys.left !== this.cursor.left.isDown) {
-    this.inputState.keys.left = inputDelta.keys.left = this.cursor.left.isDown;
+  if (this.inputState.keys.left !== leftPressed) {
+    this.inputState.keys.left = inputDelta.keys.left = leftPressed;
     this.body.facing = Phaser.LEFT;
     if (this.inputState.keys.right) {
       this.inputState.keys.right = inputDelta.keys.right = false;
     }
     update = true;
-  } else if (this.inputState.keys.right !== this.cursor.right.isDown) {
+  } else if (this.inputState.keys.right !== rightPressed) {
     this.body.facing = Phaser.RIGHT;
     if (!this.inputState.keys.left) {
-      this.inputState.keys.right = inputDelta.keys.right = this.cursor.right.isDown;
+      this.inputState.keys.right = inputDelta.keys.right = rightPressed;
       update = true;
     }
   }

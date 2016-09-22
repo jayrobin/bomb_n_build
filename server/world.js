@@ -297,6 +297,10 @@ const world = {
     const currentGridPos = this.coordsToGridPos(body.pos);
     const currentTile = this.getTile(currentGridPos.x, currentGridPos.y);
 
+    if (!currentTile) {
+      return;
+    }
+
     let playerPoints = [
       { x: body.pos.x - body.width / 2 + 1, y: body.pos.y - body.height / 2 + 1 },
       { x: body.pos.x + body.width / 2 - 1, y: body.pos.y - body.height / 2 + 1 },
@@ -308,7 +312,7 @@ const world = {
       let gridPos = this.coordsToGridPos(point);
       return this.getTile(gridPos.x, gridPos.y);
     }).filter((tile) => {
-      return !tile.isPassable(currentTile);
+      return tile && !tile.isPassable(currentTile);
     });
 
     if (overlappingTiles.length > 0) {
