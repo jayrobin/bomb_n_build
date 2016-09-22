@@ -120,6 +120,7 @@ var playState = {
     indicator.setSpeed(time, totalTime, speed);
   },
   start: function() {
+    this.setPlayerScore(this.player, 0);
     this.running = true;
   },
   setupUI: function() {
@@ -131,7 +132,7 @@ var playState = {
     var spawnKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     spawnKey.onDown.add(this.spawnPlayer, this);
 
-    this.playerListLabel = game.add.text(240, 170, "Test", { font: "32px Arial", fill: "#ffffff", align: "center" });
+    this.playerListLabel = game.add.text(240, 170, "", { font: "32px Arial", fill: "#ffffff", align: "center" });
     this.playerListLabel.fixedToCamera = true;
     this.playerListLabel.anchor.setTo(0.5, 0.5);
     this.playerListLabel.visible = false;
