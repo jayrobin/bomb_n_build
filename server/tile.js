@@ -70,7 +70,15 @@ Tile.prototype.upgrade = function() {
   return this.type;
 };
 
-Tile.prototype.isPassable = function() {
+Tile.prototype.isPassable = function(compareTile) {
+  if (this === compareTile) {
+    return true;
+  }
+
+  if (!!this.bomb) {
+    return false;
+  }
+
   switch(this.type) {
     case Tile.TYPE.SAFE:
     case Tile.TYPE.FLOOR:

@@ -284,6 +284,9 @@ const world = {
     });
   },
   resolveTileCollisions(body, targetPos) {
+    const currentGridPos = this.coordsToGridPos(body.pos);
+    const currentTile = this.getTile(currentGridPos.x, currentGridPos.y);
+
     if (body.velocity.y > 0) {
       const leftX = body.pos.x - body.width / 2 + 1;
       const rightX = body.pos.x + body.width / 2 - 1;
@@ -292,7 +295,7 @@ const world = {
 
       const leftTile = this.getTile(leftGridPos.x, leftGridPos.y);
       const rightTile = this.getTile(rightGridPos.x, rightGridPos.y);
-      if ((leftTile && !leftTile.isPassable()) || (rightTile && !rightTile.isPassable())) {
+      if ((leftTile && !leftTile.isPassable(currentTile)) || (rightTile && !rightTile.isPassable(currentTile))) {
         targetPos.y = leftGridPos.y * this.CELL_SIZE - body.height / 2 - 4;
       }
     } else if (body.velocity.y < 0) {
@@ -303,7 +306,7 @@ const world = {
 
       const leftTile = this.getTile(leftGridPos.x, leftGridPos.y);
       const rightTile = this.getTile(rightGridPos.x, rightGridPos.y);
-      if ((leftTile && !leftTile.isPassable()) || (rightTile && !rightTile.isPassable())) {
+      if ((leftTile && !leftTile.isPassable(currentTile)) || (rightTile && !rightTile.isPassable(currentTile))) {
         targetPos.y = (leftGridPos.y + 1) * this.CELL_SIZE + body.height / 2;
       }
     }
@@ -316,7 +319,7 @@ const world = {
 
       const topTile = this.getTile(topGridPos.x, topGridPos.y);
       const bottomTile = this.getTile(bottomGridPos.x, bottomGridPos.y);
-      if ((topTile && !topTile.isPassable()) || (bottomTile && !bottomTile.isPassable())) {
+      if ((topTile && !topTile.isPassable(currentTile)) || (bottomTile && !bottomTile.isPassable(currentTile))) {
         targetPos.x = topGridPos.x * this.CELL_SIZE - body.width / 2;
       }
     } else if (body.velocity.x < 0) {
@@ -327,7 +330,7 @@ const world = {
 
       const topTile = this.getTile(topGridPos.x, topGridPos.y);
       const bottomTile = this.getTile(bottomGridPos.x, bottomGridPos.y);
-      if ((topTile && !topTile.isPassable()) || (bottomTile && !bottomTile.isPassable())) {
+      if ((topTile && !topTile.isPassable(currentTile)) || (bottomTile && !bottomTile.isPassable(currentTile))) {
         targetPos.x = (topGridPos.x + 1) * this.CELL_SIZE + body.width / 2;
       }
     }
