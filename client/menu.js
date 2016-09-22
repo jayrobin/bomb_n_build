@@ -1,4 +1,5 @@
-var playerName = "Guest" + Math.floor(Math.random() * 999)
+var playerName = "Guest" + Math.floor(Math.random() * 999);
+var version = '0.1';
 var menuState = {
   create: function() {
     this.game.world.setBounds(0, 0, 480, 340);
@@ -11,6 +12,8 @@ var menuState = {
 
     var startLabel = game.add.text(game.world.centerX, game.world.height - 50, 'Press ENTER to start', { font: '25px Arial', fill: '#ffffff' });
     startLabel.anchor.setTo(0.5, 0.5);
+
+    var versionLabel = game.add.text(5, game.world.height - 15, version, { font: '10px Arial', fill: '#ffffff', align: 'left' });
 
     var upKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
     upKey.onDown.addOnce(this.start, this);
