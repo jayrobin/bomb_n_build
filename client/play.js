@@ -96,6 +96,7 @@ var playState = {
     return buildIndicator;
   },
   handlePlayerDie: function(player, _explosion) {
+    this.setPlayerScore(player, 0);
     if (player === this.player) {
       this.player.stopBuilding();
       this.showDeathScreen();
@@ -148,10 +149,10 @@ var playState = {
     player.setScore(score);
 
     var sortedPlayers = this.players.children.sort(function(a, b) {
-      return a.score - b.score;
+      return b.score - a.score;
     });
 
-    var topPlayers = sortedPlayers.slice(0, Math.min(sortedPlayers.length, 5));
+    var topPlayers = sortedPlayers.slice(-5);
     var playerList = "";
     topPlayers.forEach(function(player) {
       playerList += player.score + ' - ' + player.playerName + '\n';
