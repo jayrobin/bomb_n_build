@@ -120,7 +120,7 @@ Client.prototype.handleDisconnection = function() {
 Client.prototype.setInitialPos = function(pos) {
   this.pos = pos;
   this.socket.emit('set_initial_pos', this.pos, this.playerName, this.color);
-  this.socket.broadcast.emit('add_player', this.id, this.playerName, this.pos, this.color);
+  this.socket.broadcast.emit('add_player', this.id, this.playerName, this.pos, this.score, this.color);
 };
 
 Client.prototype.handleUpdateInput = function(input) {

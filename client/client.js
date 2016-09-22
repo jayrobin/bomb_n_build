@@ -36,13 +36,13 @@ var Client = {
   handleMapState: function(map) {
     this.game.setMap(map);
   },
-  handleAddPlayer: function(id, playerName, pos, color) {
+  handleAddPlayer: function(id, playerName, pos, score, color) {
     console.log("Adding net player " + playerName + " (" + pos.x + ", " + pos.y + ") - " + color);
-    this.game.createNetPlayer(id, playerName, pos.x, pos.y, color);
+    this.game.createNetPlayer(id, playerName, pos.x, pos.y, score, color);
   },
   handleCurrentPlayers: function(players) {
     players.forEach(function(player) {
-      this.handleAddPlayer(player.id, player.playerName, player.pos, player.color);
+      this.handleAddPlayer(player.id, player.playerName, player.pos, player.score, player.color);
     }, this);
   },
   handleRemovePlayer: function(id) {

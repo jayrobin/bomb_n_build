@@ -60,7 +60,13 @@ const world = {
   },
   getClients: function() {
     return this.clients.map((client) => {
-      return { id: client.id, playerName: client.playerName, pos: client.pos, color: client.color };
+      return {
+        id: client.id,
+        playerName: client.playerName,
+        pos: client.pos,
+        score: client.score,
+        color: client.color
+      };
     });
   },
   getBombPositions: function() {

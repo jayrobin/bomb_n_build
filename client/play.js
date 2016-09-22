@@ -28,8 +28,9 @@ var playState = {
     this.players.add(this.player);
     game.camera.follow(this.player);
   },
-  createNetPlayer: function(id, playerName, x, y, color) {
+  createNetPlayer: function(id, playerName, x, y, score, color) {
     var player = new NetPlayer(id, playerName, x, y, color, this.createPlayerLabel());
+    this.setPlayerScore(player, score);
     this.players.add(player);
   },
   findPlayerById: function(id) {
