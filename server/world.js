@@ -113,7 +113,10 @@ const world = {
     this.server.emit('set_tile', { x: x, y: y }, type);
   },
   upgradeTile: function(x, y) {
-    return this.getTile(x, y).upgrade();
+    const tile = this.getTile(x, y);
+    if (tile) {
+      return tile.upgrade();
+    }
   },
   startBuilding: function(x, y) {
     const tile = this.getTile(x, y);
@@ -124,8 +127,10 @@ const world = {
   },
   stopBuilding: function(x, y) {
     const tile = this.getTile(x, y);
-    tile.stopBuilding();
-    this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
+    if (tile) {
+      tile.stopBuilding();
+      this.server.emit('set_tile_build_speed', { x: x, y: y }, tile.getBuildInfo());
+    }
   },
   getBuilders: function() {
     return this.clients.filter((client) => {
@@ -139,7 +144,7 @@ const world = {
     amount = amount || 1;
 
     const tile = this.getTile(x, y);
-    if (tile.damage(amount)) {
+    if (tile && tile.damage(amount)) {
       this.server.emit('set_tile', { x: x, y: y }, tile.type);
     }
   },
@@ -270,7 +275,7 @@ const world = {
 
     const gridPos = this.coordsToGridPos(pos);
     const tile = this.getTile(gridPos.x, gridPos.y);
-    if (!tile.isPassable()) {
+    if (tile && !tile.isPassable()) {
       return false;
     }
 
