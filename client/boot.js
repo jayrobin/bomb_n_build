@@ -10,12 +10,12 @@ var bootState = {
     game.add.plugin(Fabrique.Plugins.InputField);
   },
   create: function() {
-    game.stage.backgroundColor = '#3498db';
+    game.stage.backgroundColor = '#000000';
     game.stage.disableVisibilityChange = true;
     game.physics.startSystem(Phaser.Physics.ARCADE);
     if (!game.device.desktop) {
       game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-      document.body.style.backgroundColor = '#3498db';
+      document.body.style.backgroundColor = '#000000';
       game.scale.minWidth = 250;
       game.scale.minHeight = 170;
       game.scale.maxWidth = 500;
