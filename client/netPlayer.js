@@ -20,7 +20,7 @@ NetPlayer.prototype.update = function() {
 
 NetPlayer.prototype.updateInput = function(input, pos) {
   if (input.keys) {
-    Object.assign(this.input.keys, input.keys);
+    Object.assign(this.inputState.keys, input.keys);
   }
 
   if (this.x !== pos.x && (input.keys.left || input.keys.right)) {

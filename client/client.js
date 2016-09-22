@@ -22,6 +22,7 @@ var Client = {
     this.socket.on('set_player_pos', this.handleSetPlayerPos.bind(this));
     this.socket.on('set_player_score', this.handleSetPlayerScore.bind(this));
     this.socket.on('update_players', this.handleUpdatePlayers.bind(this));
+    this.socket.on('disconnect', this.handleDisconnection.bind(this));
   },
   handleRegisterID: function(id) {
     console.log("Registering ID: " + id);
@@ -123,5 +124,8 @@ var Client = {
       var player = this.game.findPlayerById(update.id);
       player.setPos(update.pos);
     }.bind(this));
+  },
+  handleDisconnection: function() {
+    this.game.quit();
   }
 };

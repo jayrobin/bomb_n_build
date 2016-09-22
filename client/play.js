@@ -181,5 +181,8 @@ var playState = {
       this.respawnLabel.visible = false;
       this.player.initRespawn();
     }
+  },
+  quit: function() {
+    game.state.start('menu');
   }
 };

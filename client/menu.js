@@ -1,6 +1,8 @@
 var playerName = "Guest" + Math.floor(Math.random() * 999)
 var menuState = {
   create: function() {
+    this.game.world.setBounds(0, 0, 480, 340);
+
     var nameLabel = game.add.text(game.world.centerX, 50, 'Bomb n Build', { font: '50px Arial', fill: '#ffffff' });
     nameLabel.anchor.setTo(0.5, 0.5);
 

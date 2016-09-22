@@ -17,7 +17,7 @@ Player.prototype.initialize = function() {
 };
 
 Player.prototype.resetInput = function() {
-  this.input = {
+  this.inputState = {
     keys: {
       up: false,
       down: false,

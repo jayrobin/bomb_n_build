@@ -8,7 +8,7 @@ const ANCHOR_X = 4;
 const ANCHOR_Y = 4;
 const MAX_BOMBS = 2;
 const SPEED = 100;
-const TICKS_PER_REFRESH_STATE = 100;
+const RATE_LIMIT_PER_TICK = 10;
 const KEYS = ['up', 'down', 'left', 'right'];
 const KEY_AXIS = {
   up: { descriptor: 'y', multiplier: -1 },
@@ -27,6 +27,7 @@ function Client(id, socket, io) {
   this.bombs = [];
   this.pos = { x: 0, y: 0 };
   this.score = 0;
+  this.messagesReceivedThisTick = 0;
   this.width = WIDTH;
   this.height = HEIGHT;
   ticks = 0;
@@ -61,11 +62,13 @@ Client.prototype.resetInput = function() {
 };
 
 Client.prototype.handleSetName = function(playerName) {
+  this.messagesReceivedThisTick++;
   this.setName(playerName);
   this.setInitialPos(world.getRandomPos(), this.getColor());
 };
 
 Client.prototype.handleRespawn = function() {
+  this.messagesReceivedThisTick++;
   const pos = world.getRandomPos();
   this.pos = pos;
   this.active = true;
@@ -74,6 +77,7 @@ Client.prototype.handleRespawn = function() {
 };
 
 Client.prototype.handleStartBuilding = function(direction) {
+  this.messagesReceivedThisTick++;
   if (this.active) {
     let gridPos = world.coordsToGridPos(this.pos);
     gridPos.x += direction.x * 2;
@@ -91,6 +95,7 @@ Client.prototype.handleStartBuilding = function(direction) {
 };
 
 Client.prototype.handleStopBuilding = function(direction) {
+  this.messagesReceivedThisTick++;
   if (this.active) {
     if (!this.buildingTile) {
       const gridPos = world.coordsToGridPos(this.pos);
@@ -124,6 +129,7 @@ Client.prototype.setInitialPos = function(pos) {
 };
 
 Client.prototype.handleUpdateInput = function(input) {
+  this.messagesReceivedThisTick++;
   Object.keys(input.keys).forEach((k) => {
     let axis = KEY_AXIS[k];
     let velocity = SPEED * axis.multiplier;
@@ -145,6 +151,7 @@ Client.prototype.handleUpdateInput = function(input) {
 };
 
 Client.prototype.handleDropBomb = function() {
+  this.messagesReceivedThisTick++;
   if (this.active && this.bombs.length < MAX_BOMBS) {
     const bombPos = world.clipPosToGrid(this.pos);
     const bomb = world.addBomb(this, bombPos.x, bombPos.y);
@@ -220,6 +227,11 @@ Client.prototype.updatePos = function() {
   if (this.dirty) {
     this.pos = world.resolveTileCollisions(this, targetPos);
   }
+
+  if (this.messagesReceivedThisTick > RATE_LIMIT_PER_TICK) {
+    this.socket.disconnect();
+  }
+  this.messagesReceivedThisTick = 0;
 };
 
 module.exports = Client;
