@@ -133,7 +133,7 @@ Client.prototype.handleUpdateInput = function(input) {
   Object.keys(input.keys).forEach((k) => {
     let axis = KEY_AXIS[k];
     let velocity = SPEED * axis.multiplier;
-    if (!input.keys[k]) {
+    if (!input.keys[k] && this.input.keys[k].pressed) {
       this.input.keys[k].pressed = false;
       if (this.input.keys[k].timePressed > 0) {
         this.input.keys[k].time = (this.input.keys[k].time || 0) + (world.getTime() - this.input.keys[k].timePressed);
