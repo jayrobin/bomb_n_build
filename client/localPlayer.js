@@ -34,10 +34,10 @@ LocalPlayer.prototype.updateInput = function(force) {
   };
   var update = false;
 
-  var upPressed = this.cursor.up.isDown || game.input.keyboard.isDown(Phaser.Keyboard.W);
-  var downPressed = this.cursor.down.isDown || game.input.keyboard.isDown(Phaser.Keyboard.S);
-  var leftPressed = this.cursor.left.isDown || game.input.keyboard.isDown(Phaser.Keyboard.A);
-  var rightPressed = this.cursor.right.isDown || game.input.keyboard.isDown(Phaser.Keyboard.D);
+  var upPressed = this.cursor.up.isDown || !!game.input.keyboard.isDown(Phaser.Keyboard.W);
+  var downPressed = this.cursor.down.isDown || !!game.input.keyboard.isDown(Phaser.Keyboard.S);
+  var leftPressed = this.cursor.left.isDown || !!game.input.keyboard.isDown(Phaser.Keyboard.A);
+  var rightPressed = this.cursor.right.isDown || !!game.input.keyboard.isDown(Phaser.Keyboard.D);
 
   if (this.inputState.keys.up !== upPressed) {
     this.inputState.keys.up = inputDelta.keys.up = upPressed;
@@ -49,7 +49,7 @@ LocalPlayer.prototype.updateInput = function(force) {
   } else if (this.inputState.keys.down !== downPressed) {
     this.body.facing = Phaser.DOWN;
     if (!this.inputState.keys.up) {
-      this.inputState.keys.down = inputDelta.keys.down = this.cursor.down.isDown;
+      this.inputState.keys.down = inputDelta.keys.down = downPressed;
       update = true;
     }
   }
