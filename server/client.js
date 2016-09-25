@@ -188,6 +188,11 @@ Client.prototype.removeBomb = function(id) {
 
 Client.prototype.kill = function(id) {
   this.active = false;
+  if (this.buildingTile) {
+    const gridPos = this.buildingTile.pos;
+    world.stopBuilding(gridPos.x, gridPos.y);
+    this.buildingTile = null;
+  }
   this.resetInput();
 };
 
@@ -199,6 +204,17 @@ Client.prototype.update = function() {
       this.updatePos();
     }
   }
+
+  if (this.messagesReceivedThisTick > RATE_LIMIT_PER_TICK) {
+    console.log(`Client kicked ${this.id} (${this.messagesReceivedThisTick} messages this tick)`);
+    if (this.buildingTile) {
+      this.buildingTile = null;
+      const gridPos = this.buildingTile.pos;
+      world.stopBuilding(gridPos.x, gridPos.y);
+    }
+    this.socket.disconnect();
+  }
+  this.messagesReceivedThisTick = 0;
 };
 
 Client.prototype.updatePos = function() {
@@ -227,11 +243,6 @@ Client.prototype.updatePos = function() {
   if (this.dirty) {
     this.pos = world.resolveTileCollisions(this, targetPos);
   }
-
-  if (this.messagesReceivedThisTick > RATE_LIMIT_PER_TICK) {
-    this.socket.disconnect();
-  }
-  this.messagesReceivedThisTick = 0;
 };
 
 module.exports = Client;

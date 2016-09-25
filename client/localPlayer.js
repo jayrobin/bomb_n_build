@@ -68,7 +68,7 @@ LocalPlayer.prototype.updateInput = function(force) {
     }
   }
 
-  if (update) {
+  if (update && !this.building) {
     Client.updateInput(inputDelta);
   } else if (force) {
     var forcedKeys = { keys: {} };
