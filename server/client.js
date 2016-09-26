@@ -80,8 +80,8 @@ Client.prototype.handleStartBuilding = function(direction) {
   this.messagesReceivedThisTick++;
   if (this.active) {
     let gridPos = world.coordsToGridPos(this.pos);
-    gridPos.x += direction.x * 2;
-    gridPos.y += direction.y * 2;
+    gridPos.x += direction.x;
+    gridPos.y += direction.y;
 
     if (this.buildingTile) {
       gridPos = this.buildingTile.pos;
