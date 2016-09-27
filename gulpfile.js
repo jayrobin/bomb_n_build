@@ -8,6 +8,7 @@ const nodemon = require('gulp-nodemon');
 const browserify = require('browserify');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
+const eslint = require('gulp-eslint');
 
 gulp.task('uglify', ['clean'], () => {
   return gulp.src('client/*.js')
@@ -43,4 +44,10 @@ gulp.task('server', ['js'], () => {
     script: 'index.js',
     watch: 'server/*.js'
   });
+});
+
+gulp.task('lint', function() {
+  return gulp.src('server/**/*.js').pipe(eslint())
+  .pipe(eslint.format())
+  .pipe(eslint.failOnError());
 });

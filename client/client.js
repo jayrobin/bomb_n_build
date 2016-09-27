@@ -25,12 +25,12 @@ module.exports = {
     this.socket.on('disconnect', this.handleDisconnection.bind(this));
   },
   handleRegisterID: function(id) {
-    console.log("Registering ID: " + id);
+    console.log('Registering ID: ' + id);
     this.id = id;
     this.socket.emit('set_name', playerName);
   },
   handleSetInitialPos: function(pos, playerName, color) {
-    console.log("Setting initial pos: " + pos.x + ", " + pos.y);
+    console.log('Setting initial pos: ' + pos.x + ', ' + pos.y);
     this.game.createPlayer(this.id, playerName, pos.x, pos.y, color);
     this.game.start();
   },
@@ -38,7 +38,7 @@ module.exports = {
     this.game.setMap(map);
   },
   handleAddPlayer: function(id, playerName, pos, score, color) {
-    console.log("Adding net player " + playerName + " (" + pos.x + ", " + pos.y + ") - " + color);
+    console.log('Adding net player ' + playerName + ' (' + pos.x + ', ' + pos.y + ') - ' + color);
     this.game.createNetPlayer(id, playerName, pos.x, pos.y, score, color);
   },
   handleCurrentPlayers: function(players) {
@@ -47,7 +47,7 @@ module.exports = {
     }, this);
   },
   handleRemovePlayer: function(id) {
-    console.log("Removing net player " + id);
+    console.log('Removing net player ' + id);
     this.game.removeNetPlayer(id);
   },
   handleUpdateInput: function(id, input, pos) {
@@ -65,7 +65,7 @@ module.exports = {
     }, this);
   },
   handleRemoveBomb: function(id) {
-    console.log("Removing bomb " + id);
+    console.log('Removing bomb ' + id);
     this.game.removeBomb(id);
   },
   handleKillPlayer: function(id) {
@@ -73,7 +73,7 @@ module.exports = {
     this.game.handlePlayerDie(player);
   },
   handleSetTile: function(pos, tileState) {
-    console.log("Setting tile " + pos.x + ", " + pos.y + " (" + tileState + ")");
+    console.log('Setting tile ' + pos.x + ', ' + pos.y + ' (' + tileState + ')');
     this.game.setTile(pos.x, pos.y, tileState);
   },
   handleSetTileBuildSpeed: function(pos, buildInfo) {

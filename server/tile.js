@@ -30,13 +30,12 @@ Tile.TYPE = {
   WALL_4: 9
 };
 
-
 Tile.prototype.getBuildInfo = function() {
   return {
     time: this.buildTimer,
     totalTime: BUILD_DELAYS[this.type],
     speed: this.numBuilders
-  }
+  };
 };
 
 Tile.prototype.damage = function(amount) {
@@ -52,19 +51,19 @@ Tile.prototype.isUpgradable = function() {
 };
 
 Tile.prototype.upgrade = function() {
-  switch(this.type) {
+  switch (this.type) {
     case Tile.TYPE.HOLE:
     case Tile.TYPE.DAMAGE_HIGH:
     case Tile.TYPE.DAMAGE_LOW:
       this.type = Tile.TYPE.FLOOR;
-    break;
+      break;
 
     case Tile.TYPE.FLOOR:
     case Tile.TYPE.WALL_1:
     case Tile.TYPE.WALL_2:
     case Tile.TYPE.WALL_3:
       this.type += 1;
-    break;
+      break;
   }
   this.buildTimer = 0;
   return this.type;
@@ -75,17 +74,17 @@ Tile.prototype.isPassable = function(compareTile) {
     return true;
   }
 
-  if (!!this.bomb) {
+  if (this.bomb) {
     return false;
   }
 
-  switch(this.type) {
+  switch (this.type) {
     case Tile.TYPE.SAFE:
     case Tile.TYPE.FLOOR:
     case Tile.TYPE.DAMAGE_HIGH:
     case Tile.TYPE.DAMAGE_LOW:
       return true;
-    break;
+      break;
 
     case Tile.TYPE.FIXED:
     case Tile.TYPE.HOLE:
@@ -93,7 +92,7 @@ Tile.prototype.isPassable = function(compareTile) {
     case Tile.TYPE.WALL_2:
     case Tile.TYPE.WALL_3:
       return false;
-    break;
+      break;
   }
 };
 

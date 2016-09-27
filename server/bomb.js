@@ -2,7 +2,6 @@
 
 const events = require('./events');
 const Subject = require('./subject');
-
 const DELAY = 3000;
 
 function Bomb(player, id, x, y, world) {

@@ -1,4 +1,4 @@
-window.playerName = "Guest" + Math.floor(Math.random() * 999);
+window.playerName = 'Guest' + Math.floor(Math.random() * 999);
 var version = '0.1';
 module.exports = {
   create: function() {

@@ -4,8 +4,6 @@ const world = require('./world');
 
 const WIDTH = 24;
 const HEIGHT = 28;
-const ANCHOR_X = 4;
-const ANCHOR_Y = 4;
 const MAX_BOMBS = 2;
 const SPEED = 100;
 const RATE_LIMIT_PER_TICK = 10;
@@ -16,7 +14,6 @@ const KEY_AXIS = {
   left: { descriptor: 'x', multiplier: -1 },
   right: { descriptor: 'x', multiplier: 1 }
 };
-let ticks;
 
 function Client(id, socket, io) {
   this.id = id;
@@ -30,7 +27,6 @@ function Client(id, socket, io) {
   this.messagesReceivedThisTick = 0;
   this.width = WIDTH;
   this.height = HEIGHT;
-  ticks = 0;
   this.resetInput();
   console.log(`Client connected: ${this.id}`);
   this.initialize();
@@ -131,8 +127,8 @@ Client.prototype.setInitialPos = function(pos) {
 Client.prototype.handleUpdateInput = function(input) {
   this.messagesReceivedThisTick++;
   Object.keys(input.keys).forEach((k) => {
-    let axis = KEY_AXIS[k];
-    let velocity = SPEED * axis.multiplier;
+    const axis = KEY_AXIS[k];
+    const velocity = SPEED * axis.multiplier;
     if (!input.keys[k] && this.input.keys[k].pressed) {
       this.input.keys[k].pressed = false;
       if (this.input.keys[k].timePressed > 0) {
@@ -172,21 +168,22 @@ Client.prototype.setName = function(playerName) {
   if (playerName.length > 2 && playerName.length < 15 && !world.getClientByName(playerName)) {
     this.playerName = playerName;
   } else {
-    this.playerName = "Guest" + Math.floor(Math.random() * 999);
+    this.playerName = 'Guest' + Math.floor(Math.random() * 999);
   }
 };
 
 Client.prototype.getColor = function() {
-  return this.color || (this.color = Math.random() * 0xffffff);
+  const color = this.color || (this.color = Math.random() * 0xffffff);
+  return color;
 };
 
 Client.prototype.removeBomb = function(id) {
-  this.bombs = this.bombs.filter(function(bomb) {
+  this.bombs = this.bombs.filter((bomb) => {
     return bomb.id !== id;
   });
 };
 
-Client.prototype.kill = function(id) {
+Client.prototype.kill = function() {
   this.active = false;
   if (this.buildingTile) {
     const gridPos = this.buildingTile.pos;
@@ -232,7 +229,7 @@ Client.prototype.updatePos = function() {
       this.input.keys[k].time = 0;
 
       if (elapsedInMs) {
-        let axis = KEY_AXIS[k];
+        const axis = KEY_AXIS[k];
 
         targetPos = targetPos || { x: this.pos.x, y: this.pos.y };
         targetPos[axis.descriptor] += this.velocity[axis.descriptor] * (elapsedInMs / 1000);
