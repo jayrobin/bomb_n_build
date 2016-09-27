@@ -38,8 +38,8 @@ module.exports = {
   },
   createNetPlayer: function(id, playerName, x, y, score, color) {
     var player = new NetPlayer(id, playerName, x, y, color, this.createPlayerLabel());
-    this.setPlayerScore(player, score);
     this.players.add(player);
+    this.setPlayerScore(player, score);
   },
   findPlayerById: function(id) {
     if (id === this.player.id) {
