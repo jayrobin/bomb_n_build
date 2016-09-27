@@ -1,4 +1,4 @@
-var bootState = {
+module.exports = {
   preload: function() {
     game.load.spritesheet('player', 'assets/img/tintPlayer.png', 32, 32, 12);
     game.load.spritesheet('enemy', 'assets/img/tintPlayer.png', 32, 32, 12);

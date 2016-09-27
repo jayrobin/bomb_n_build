@@ -24,3 +24,5 @@ World.prototype.setTiles = function(tileArr) {
 World.prototype.setTile = function(x, y, tileState) {
   this.map.putTile(tileState, x, y, this.tiles);
 };
+
+module.exports = World;

@@ -1,3 +1,5 @@
+var Player = require('./player');
+
 function NetPlayer(id, playerName, x, y, color, label) {
   Phaser.Sprite.call(this, game, x, y, 'enemy');
   this.tint = color;
@@ -31,3 +33,5 @@ NetPlayer.prototype.updateInput = function(input, pos) {
     this.y = pos.y;
   }
 };
+
+module.exports = NetPlayer;

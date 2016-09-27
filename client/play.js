@@ -1,4 +1,12 @@
-var playState = {
+var LocalPlayer = require('./localPlayer');
+var NetPlayer = require('./netPlayer');
+var World = require('./world');
+var Bomb = require('./bomb');
+var Explosion = require('./explosion');
+var Client = require('./client');
+var BuildIndicator = require('./buildIndicator');
+
+module.exports = {
   create: function() {
     this.running = false;
     this.world = new World();

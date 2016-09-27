@@ -1,4 +1,4 @@
-var Client = {
+module.exports = {
   connect: function(game) {
     this.game = game;
     this.socket = io();

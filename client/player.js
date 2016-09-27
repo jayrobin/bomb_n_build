@@ -122,3 +122,5 @@ Player.prototype.setScore = function(score) {
   this.score = score;
   this.label.text = this.playerName + ' (' + score + ')';
 };
+
+module.exports = Player;

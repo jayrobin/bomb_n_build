@@ -1,3 +1,6 @@
+var Player = require('./player');
+var Client = require('./client');
+
 function LocalPlayer(id, playerName, x, y, color, label) {
   Phaser.Sprite.call(this, game, x, y, 'player');
   this.tint = color;
@@ -110,3 +113,5 @@ LocalPlayer.prototype.stopBuilding = function() {
     Client.stopBuilding(this.getDirection());
   }
 };
+
+module.exports = LocalPlayer;

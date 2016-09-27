@@ -29,3 +29,5 @@ BuildIndicator.prototype.setSpeed = function(time, totalTime, speed) {
     this.animations.currentAnim.setFrame(Math.round((time / totalTime) * this.animations.frameTotal));
   }
 };
+
+module.exports = BuildIndicator;

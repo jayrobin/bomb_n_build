@@ -25,3 +25,5 @@ Bomb.prototype.setupAnimations = function() {
 Bomb.prototype.remove = function() {
   this.kill();
 };
+
+module.exports = Bomb;

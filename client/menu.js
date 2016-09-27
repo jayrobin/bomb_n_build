@@ -1,6 +1,6 @@
-var playerName = "Guest" + Math.floor(Math.random() * 999);
+window.playerName = "Guest" + Math.floor(Math.random() * 999);
 var version = '0.1';
-var menuState = {
+module.exports = {
   create: function() {
     this.game.world.setBounds(0, 0, 480, 340);
 

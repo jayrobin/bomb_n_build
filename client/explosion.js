@@ -21,3 +21,5 @@ Explosion.prototype.init = function(x, y) {
 Explosion.prototype.remove = function() {
   this.kill();
 };
+
+module.exports = Explosion;
