@@ -195,6 +195,9 @@ Client.prototype.kill = function() {
 
 Client.prototype.update = function() {
   if (this.active) {
+    if (!this.pos) {
+      this.socket.disconnect();
+    }
     if (this.isBuilding()) {
       this.buildingTile.update();
     } else {
