@@ -1,4 +1,4 @@
-# multi_game
+# Bomb 'n Build
 
 A real-time multiplayer game where players attempt to bomb each other while building up defenses.
 
